@@ -21,6 +21,7 @@ set autowrite
 set autochdir
 set linespace=0
 set diffopt+=horizontal
+set colorcolumn=80
 
 syntax enable
 filetype on

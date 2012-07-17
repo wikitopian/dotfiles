@@ -114,3 +114,15 @@ set stl=%f\ %m\ %r%{VCSCommandGetStatusLine()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%
 
 " dbext directives
 source ~/.vim/db.vim
+
+" rotating wallpaper!
+nnoremap <leader>1 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg1.png"<CR><CR>
+nnoremap <leader>2 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg2.png"<CR><CR>
+nnoremap <leader>3 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg3.png"<CR><CR>
+nnoremap <leader>4 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg4.png"<CR><CR>
+nnoremap <leader>5 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg5.png"<CR><CR>
+nnoremap <leader>6 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg6.png"<CR><CR>
+nnoremap <leader>7 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg7.png"<CR><CR>
+nnoremap <leader>8 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg8.png"<CR><CR>
+nnoremap <leader>9 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg9.png"<CR><CR>
+nnoremap <leader>0 :execute '!'."pcmanfm --set-wallpaper=/home/parrott/Dropbox/train/bg0.png"<CR><CR>

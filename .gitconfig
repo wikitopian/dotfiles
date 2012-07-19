@@ -1,0 +1,13 @@
+[user]
+	name = wikitopian
+	email = matt@swarmstrategies.com
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[merge]
+	tool = vimdiff
+[diff]
+	external = vimdiff
+[difftool]
+	prompt = false

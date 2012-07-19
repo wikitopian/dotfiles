@@ -1,0 +1,14 @@
+; generated_rule VT1
+( if 
+( begin 
+( is ( window_name ) "Linux Terminal" )
+) 
+( begin 
+( pin )
+( undecorate )
+( maximize )
+( skip_tasklist )
+( below )
+( println "match" )
+)
+)

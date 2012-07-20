@@ -1,0 +1,12 @@
+; generated_rule VT2
+( if 
+( begin 
+( is ( window_name ) "Matt Parrott" )
+) 
+( begin 
+( undecorate )
+( maximize )
+( set_workspace 0 )
+( println "match" )
+)
+)

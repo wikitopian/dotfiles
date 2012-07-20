@@ -29,7 +29,7 @@ defflow off
 nonblock on
 
 screen -t "blinkenshell" 0 /usr/bin/ssh blinkenshell
-screen -t "vim" 1 /bin/bash -c "/usr/bin/vim --servername PARROTT"
+screen -t "vim" 1 /bin/bash -c "/usr/bin/vim --servername VIM"
 screen -t "shell" 2 /bin/bash
 
-select 0
+select 2

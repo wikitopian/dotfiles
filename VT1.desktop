@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VT1
+GenericName=VT1
+Comment=Linux Terminal
+Exec=gnome-terminal --profile="Linux Terminal"
+Terminal=false
+Type=Application
+Icon=gnome-terminal
+Categories=Network;FileTransfer;
+StartupNotify=false

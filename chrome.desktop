@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Chrome
+GenericName=Google Chrome
+Comment=Web Browser
+Exec=google-chrome
+Terminal=false
+Type=Application
+Icon=google-chrome
+StartupNotify=false

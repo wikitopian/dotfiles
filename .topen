@@ -1,1 +1,10 @@
-/home/parrott/Dropbox/admin/home/topen
+#!/bin/bash
+if [[ $( screen -ls | grep -c LHBEACON) == 1 ]]
+
+then
+   exec screen -x LHBEACON
+
+else
+  exec screen -S LHBEACON
+
+fi

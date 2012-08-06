@@ -35,6 +35,10 @@ set directory=~/.vim/backup
 "Marks
 set viminfo='100,f1
 
+"Folding
+set foldmethod=indent
+set foldlevel=1
+
 "Search
 set history=500 " keep 500 lines of command line history
 set ignorecase		" ignores case
@@ -102,8 +106,8 @@ endfunction
 noremap <F3> <ESC>:call Easy_Mode()<CR>
 noremap <F4> <ESC>:call Hard_Mode()<CR>
 
-" Easily edit .vimrc
-nnoremap <leader>v :vsplit $MYVIMRC<cr>
+" Automatically start searches in very magic mode
+nnoremap / /\v
 
 " Email syntax highlighting
 au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt* :set ft=mail

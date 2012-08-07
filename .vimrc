@@ -32,6 +32,17 @@ colorscheme desert
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
+augroup backups
+	autocmd!
+	autocmd BufWritePost,FileWritePost * call GitBackup()
+augroup END
+function! GitBackup()
+	let l:tree = '~/.vim/backup'.expand("%:p:h").'/'.expand("%:t")
+	let l:repo = '/home/matt/.vim/backup'
+	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' add -A'
+	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' commit -am "'.l:tree.'"'
+endfunction
+
 "Marks
 set viminfo='100,f1
 

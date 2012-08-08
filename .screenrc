@@ -35,9 +35,8 @@ screen -t "blinkenshell" 0 /usr/bin/ssh blinkenshell
 screen -t "vim" 1 /bin/bash -c "/usr/bin/vim --servername VIM"
 screen -t "shell" 2 /bin/bash
 
-screen -t "gmail" 11 /bin/bash
-screen -t "matt" 12 /bin/bash
-screen -t "wikitopian" 13 /bin/bash
-screen -t "shady" 14 /bin/bash
+screen -t "gmail" 11 /usr/bin/mutt -F /home/matt/.mutt/account.gmail
+screen -t "swarm" 12 /usr/bin/mutt -F /home/matt/.mutt/account.swarm
+screen -t "other" 13 /usr/bin/mutt -F /home/matt/.mutt/account.other
 
 select 2

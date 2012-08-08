@@ -6,6 +6,11 @@ set header_cache=~/.mutt/cache/headers
 set message_cachedir=~/.mutt/cache/bodies
 set certificate_file=~/.mutt/certificates
 
+set record="$HOME/.mutt/Mail/sent"
+set mbox="$HOME/.mutt/Mail/mbox"
+set postponed="$HOME/.mutt/Mail/postponed"
+set folder="$HOME/.mutt/Mail"
+
 set include
 set sort = 'threads'
 set sort_aux = 'reverse-last-date-received'

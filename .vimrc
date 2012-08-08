@@ -127,6 +127,8 @@ au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt
 let VCSCommandEnableBufferSetup=1
 set stl=%f\ %m\ %r%{VCSCommandGetStatusLine()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 
+let g:vimwiki_list = [{'path': '~/.vim/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
+
 " dbext directives
 source ~/.vim/db.vim
 

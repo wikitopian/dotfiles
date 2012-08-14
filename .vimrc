@@ -26,22 +26,21 @@ set colorcolumn=80
 syntax enable
 filetype on
 filetype plugin indent on
-colorscheme desert
 
 "Backup
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
-augroup backups
-	autocmd!
-	autocmd BufWritePost,FileWritePost * call GitBackup()
-augroup END
-function! GitBackup()
-	let l:tree = '~/.vim/backup'.expand("%:p:h").'/'.expand("%:t")
-	let l:repo = '/home/matt/.vim/backup'
-	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' add -A'
-	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' commit -am "'.l:tree.'"'
-endfunction
+"augroup backups
+"	autocmd!
+"	autocmd BufWritePost,FileWritePost * call GitBackup()
+"augroup END
+"function! GitBackup()
+"	let l:tree = '~/.vim/backup'.expand("%:p:h").'/'.expand("%:t")
+"	let l:repo = '/home/matt/.vim/backup'
+"	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' add -A'
+"	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' commit -am "'.l:tree.'"'
+"endfunction
 
 "Marks
 set viminfo='100,f1
@@ -73,8 +72,8 @@ augroup END
 
 " Check PHP syntax
 function! Php_lint()
-	:1,$ w! ~/.vim/archive/lint.php
-	:!php -l ~/.vim/archive/lint.php
+	:1,$ w! ~/.vim/backup/lint.php
+	:!php -l ~/.vim/backup/lint.php
 endfunction
 map <leader>r <Esc>:call Php_lint()<CR>
 
@@ -129,17 +128,26 @@ set stl=%f\ %m\ %r%{VCSCommandGetStatusLine()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%
 
 let g:vimwiki_list = [{'path': '~/.vim/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
 
+" Convert MarkDown to HTML and show preview
+function! MarkdownPreview()
+	silent exec ":1,$ w! ~/.vim/backup/scratch.md"
+	silent exec '!php -f ~/.vim/scratch.php ~/.vim/backup/scratch.md > ~/.vim/backup/scratch.html'
+	silent exec '!google-chrome ~/.vim/backup/scratch.html >> /dev/null'
+endfunction
+map <leader>m <Esc>:call MarkdownPreview()<CR>
+
 " dbext directives
 source ~/.vim/db.vim
 
 " rotating wallpaper!
-nnoremap <leader>1 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg1.png"<CR><CR>
-nnoremap <leader>2 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg2.png"<CR><CR>
-nnoremap <leader>3 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg3.png"<CR><CR>
-nnoremap <leader>4 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg4.png"<CR><CR>
-nnoremap <leader>5 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg5.png"<CR><CR>
-nnoremap <leader>6 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg6.png"<CR><CR>
-nnoremap <leader>7 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg7.png"<CR><CR>
-nnoremap <leader>8 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg8.png"<CR><CR>
-nnoremap <leader>9 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg9.png"<CR><CR>
-nnoremap <leader>0 :execute '!'."pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg0.png"<CR><CR>
+let g:wallpaper = 'pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg'
+nnoremap <leader>1 :execute '!'.g:wallpaper.'1'.'.png'<CR><CR>
+nnoremap <leader>2 :execute '!'.g:wallpaper.'2'.'.png'<CR><CR>
+nnoremap <leader>3 :execute '!'.g:wallpaper.'3'.'.png'<CR><CR>
+nnoremap <leader>4 :execute '!'.g:wallpaper.'4'.'.png'<CR><CR>
+nnoremap <leader>5 :execute '!'.g:wallpaper.'5'.'.png'<CR><CR>
+nnoremap <leader>6 :execute '!'.g:wallpaper.'6'.'.png'<CR><CR>
+nnoremap <leader>7 :execute '!'.g:wallpaper.'7'.'.png'<CR><CR>
+nnoremap <leader>8 :execute '!'.g:wallpaper.'8'.'.png'<CR><CR>
+nnoremap <leader>9 :execute '!'.g:wallpaper.'9'.'.png'<CR><CR>
+nnoremap <leader>0 :execute '!'.g:wallpaper.'0'.'.png'<CR><CR>

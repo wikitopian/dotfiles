@@ -1,7 +1,6 @@
 #we know
 startup_message off
 
-# I hide mutt after 10th screen
 maxwin 99
 
 # more scrollbacks!
@@ -21,7 +20,7 @@ hardstatus off
 
 #default shell title. for bash, place in .bashrc to update titles to current running program:
 # export PS1='\[\033k\033\\\]\u@\h:\w\$ '
-shelltitle "$ |bash"
+shelltitle "$ |ash"
 
 # turn off XON/XOFF, wow. seriously. whys it default, ick.
 defflow off
@@ -32,11 +31,8 @@ defflow off
 nonblock on
 
 screen -t "blinkenshell" 0 /usr/bin/ssh blinkenshell
-screen -t "vim" 1 /bin/bash -c "/usr/bin/vim --servername VIM"
-screen -t "shell" 2 /bin/bash
+screen -t "vim" 1 /bin/ash -c "/usr/bin/vim --servername VIM"
+screen -t "mail" 2 /usr/bin/mutt
+screen -t "shell" 3 /bin/ash
 
-screen -t "gmail" 11 /usr/bin/mutt -F /home/matt/.mutt/account.gmail
-screen -t "swarm" 12 /usr/bin/mutt -F /home/matt/.mutt/account.swarm
-screen -t "other" 13 /usr/bin/mutt -F /home/matt/.mutt/account.other
-
-select 2
+select 3

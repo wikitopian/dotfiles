@@ -23,17 +23,23 @@ hardstatus off
 shelltitle "$ |ash"
 
 # turn off XON/XOFF, wow. seriously. whys it default, ick.
-
 defflow off
 
-"caption always "%?%{ Wk}%-Lw%?%{Rk}%n*%f %t%?(%u)%?%?%{Wk}%+Lw%? %{Rk}%=%c %{rk}%d/%M/%Y"
+caption always "Vim: %?%{ Wk}%-Lw%?%{Rk}%n*%f %t%?(%u)%?%?%{Wk}%+Lw%? %{Rk}%=%c %{rk}%d/%M/%Y"
 "hardstatus string "%{+b Rk}(%{-b g}$LOGNAME@%H%{+b R}) (%{-b g}%C %a%{+b R}) %{-b g} %n %t %h"
 
 nonblock on
 
-screen -t "blinkenshell" 0 /usr/bin/ssh blinkenshell
-screen -t "vim" 1 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.vim
-screen -t "remote" 2 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.shell
-screen -t "shell" 3 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.shell
+screen -t "cheat" 0 /usr/bin/vim --servername CHEAT -s ~/Dropbox/admin/dotfiles/vimwiki.vim
+screen -t "one" 1 /usr/bin/vim --servername ONE
+screen -t "two" 2 /usr/bin/vim --servername TWO
+screen -t "three" 3 /usr/bin/vim --servername THREE
+screen -t "four" 4 /usr/bin/vim --servername FOUR
+screen -t "five" 5 /usr/bin/vim --servername FIVE
+screen -t "six" 6 /usr/bin/vim --servername SIX
+screen -t "seven" 7 /usr/bin/vim --servername SEVEN
+screen -t "eight" 8 /usr/bin/vim --servername EIGHT
+screen -t "nine" 9 /usr/bin/vim --servername NINE
 
-select 3
+
+select 0

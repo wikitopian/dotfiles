@@ -23,17 +23,13 @@ hardstatus off
 shelltitle "$ |ash"
 
 # turn off XON/XOFF, wow. seriously. whys it default, ick.
-
 defflow off
 
-"caption always "%?%{ Wk}%-Lw%?%{Rk}%n*%f %t%?(%u)%?%?%{Wk}%+Lw%? %{Rk}%=%c %{rk}%d/%M/%Y"
-"hardstatus string "%{+b Rk}(%{-b g}$LOGNAME@%H%{+b R}) (%{-b g}%C %a%{+b R}) %{-b g} %n %t %h"
+#caption always "SSH: %?%{ Wk}%-Lw%?%{Rk}%n*%f %t%?(%u)%?%?%{Wk}%+Lw%? %{Rk}%=%c %{rk}%d/%M/%Y"
+#hardstatus string "%{+b Rk}(%{-b g}$LOGNAME@%H%{+b R}) (%{-b g}%C %a%{+b R}) %{-b g} %n %t %h"
 
 nonblock on
 
-screen -t "blinkenshell" 0 /usr/bin/ssh blinkenshell
-screen -t "vim" 1 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.vim
-screen -t "remote" 2 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.shell
-screen -t "shell" 3 /usr/bin/screen -m -c ~/Dropbox/admin/dotfiles/.screenrc.shell
+screen -t "zero" 0 /bin/ash
 
-select 3
+select 0

@@ -1,53 +1,34 @@
-set showtabline=2
+set showtabline=1
 set wildmenu
 set wildmode=list:longest
-set showmatch
 set encoding=utf8
 set number
 set hidden
 set spelllang=en
-set incsearch
 set nopaste
 set autoindent
 set fileformats=unix,dos
 set comments=sr:/*,mb:*,ex:*/
-set shiftwidth=4
-set tabstop=4
 set laststatus=2
 set nowb
 set cursorline
 set scrolloff=3
-set autowrite
 set autochdir
 set linespace=0
 set diffopt+=horizontal
-set colorcolumn=80
-
 syntax enable
-filetype on
 filetype plugin indent on
 
 "Backup
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup
 
-"augroup backups
-"	autocmd!
-"	autocmd BufWritePost,FileWritePost * call GitBackup()
-"augroup END
-"function! GitBackup()
-"	let l:tree = '~/.vim/backup'.expand("%:p:h").'/'.expand("%:t")
-"	let l:repo = '/home/matt/.vim/backup'
-"	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' add -A'
-"	exec '!git --git-dir='.l:repo.'/.git --work-tree='.l:repo.' commit -am "'.l:tree.'"'
-"endfunction
-
 "Marks
 set viminfo='100,f1
 
 "Folding
-set foldmethod=indent
-set foldlevel=1
+"set foldmethod=indent
+"set foldlevel=1
 
 "Search
 set history=500 " keep 500 lines of command line history
@@ -59,15 +40,30 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
+" The final answer to the Tab Question
+set colorcolumn=80
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+set list listchars=tab:»·,trail:·
+
+function! SwitchTab()
+    setlocal expandtab!
+endfunction
+vnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+inoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+nnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+
 augroup wspace
-	autocmd!
-	" Visual warning about trailing whitespace
-	highlight ExtraWhitespace ctermbg=red guibg=red
-	match ExtraWhitespace /\s\+$/
-	autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-	autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-	autocmd BufWinLeave * call clearmatches()
+    autocmd!
+    " Visual warning about trailing whitespace and mixed up spacing
+    highlight ExtraWhitespace ctermbg=red guibg=red
+    match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
+    autocmd BufWinEnter * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
+    autocmd InsertEnter * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
+    autocmd InsertLeave * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
+    autocmd BufWinLeave * call clearmatches()
 augroup END
 
 " Check PHP syntax
@@ -75,7 +71,7 @@ function! Php_lint()
 	:1,$ w! ~/.vim/backup/lint.php
 	:!php -l ~/.vim/backup/lint.php
 endfunction
-map <leader>r <Esc>:call Php_lint()<CR>
+nnoremap <leader>r <Esc>:call Php_lint()<CR>
 
 " Train myself to think and edit in patterns rather than characters
 noremap <Left> \
@@ -94,10 +90,10 @@ inoremap <PageDown> <nop>
 
 noremap <CR> <nop>
 
-nnoremap h <nop>
-nnoremap j <nop>
-nnoremap k <nop>
-nnoremap l <nop>
+" nnoremap h <nop>
+" nnoremap j <nop>
+" nnoremap k <nop>
+" nnoremap l <nop>
 
 function! Hard_Mode()
 	nnoremap h <nop>
@@ -116,17 +112,13 @@ endfunction
 noremap <F3> <ESC>:call Easy_Mode()<CR>
 noremap <F4> <ESC>:call Hard_Mode()<CR>
 
-" Automatically start searches in very magic mode
-nnoremap / /\v
-
 " Email syntax highlighting
 au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt* :set ft=mail
 
 " Set the status line the way i like it
-let VCSCommandEnableBufferSetup=1
-set stl=%f\ %m\ %r%{VCSCommandGetStatusLine()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
+set stl=%f\ %m\ %r%{fugitive#statusline()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
 
-let g:vimwiki_list = [{'path': '~/.vim/wiki/', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '~/Dropbox/admin/cheat-sheet/', 'syntax': 'markdown', 'ext': '.md'}]
 
 " Convert MarkDown to HTML and show preview
 function! MarkdownPreview()

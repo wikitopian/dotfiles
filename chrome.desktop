@@ -7,25 +7,3 @@ Terminal=false
 Type=Application
 Icon=google-chrome
 StartupNotify=false
-
-[Desktop Entry]
-Name=VT2
-GenericName=VT2
-Comment=Matt Parrott
-Exec=gnome-terminal --profile="Matt Parrott"
-Terminal=false
-Type=Application
-Icon=gnome-terminal
-Categories=Network;FileTransfer;
-StartupNotify=false
-
-[Desktop Entry]
-Name=VT1
-GenericName=VT1
-Comment=Linux Terminal
-Exec=gnome-terminal --profile="Linux Terminal"
-Terminal=false
-Type=Application
-Icon=gnome-terminal
-Categories=Network;FileTransfer;
-StartupNotify=false

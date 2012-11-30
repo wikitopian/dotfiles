@@ -2,7 +2,7 @@
 Name=VT1
 GenericName=VT1
 Comment=Linux Terminal
-Exec=gnome-terminal --profile="Linux Terminal"
+Exec=gnome-terminal --profile="Shell"
 Terminal=false
 Type=Application
 Icon=gnome-terminal

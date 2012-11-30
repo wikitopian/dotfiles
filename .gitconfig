@@ -1,14 +1,14 @@
 [core]
-	editor = vim
+    editor = vim
 [user]
-	name = wikitopian
-	email = matt@swarmstrategies.com
+    name = wikitopian
+    email = matt@swarmstrategies.com
 [merge]
-	tool = vimdiff
+    tool = vimdiff
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 [difftool]
-	prompt = false
+    prompt = false
 [color]
     branch = auto
     diff = auto

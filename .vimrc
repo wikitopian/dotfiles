@@ -40,6 +40,8 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
+nmap <silent> <leader>/ :nohlsearch<CR>
+
 " The final answer to the Tab Question
 set colorcolumn=80
 set shiftwidth=4
@@ -68,10 +70,19 @@ augroup END
 
 " Check PHP syntax
 function! Php_lint()
-	:1,$ w! ~/.vim/backup/lint.php
-	:!php -l ~/.vim/backup/lint.php
+    :1,$ w! ~/.vim/backup/lint.php
+    :!php -l ~/.vim/backup/lint.php
 endfunction
 nnoremap <leader>r <Esc>:call Php_lint()<CR>
+
+" Tags
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+let Tlist_WinWidth = 50
+
+function! Tag_list()
+    :TlistToggle
+endfunction
+nnoremap <leader>t <Esc>:call Tag_list()<CR>
 
 " Train myself to think and edit in patterns rather than characters
 noremap <Left> \
@@ -96,29 +107,31 @@ noremap <CR> <nop>
 " nnoremap l <nop>
 
 function! Hard_Mode()
-	nnoremap h <nop>
-	nnoremap j <nop>
-	nnoremap k <nop>
-	nnoremap l <nop>
-	:echom "VIM: Hard Mode!"
+    nnoremap <buffer> h <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
+    nnoremap <buffer> j <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
+    nnoremap <buffer> k <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
+    nnoremap <buffer> l <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
+    nnoremap <buffer> - <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
+    nnoremap <buffer> + <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
 endfunction
 function! Easy_Mode()
-	nnoremap h h
-	nnoremap j j
-	nnoremap k k
-	nnoremap l l
-	:echom "You are weak..."
+    nnoremap <buffer> h h
+    nnoremap <buffer> j j
+    nnoremap <buffer> k k
+    nnoremap <buffer> l l
+    nnoremap <buffer> - -
+    nnoremap <buffer> + +
+    :echo "You are weak..."
 endfunction
-noremap <F3> <ESC>:call Easy_Mode()<CR>
-noremap <F4> <ESC>:call Hard_Mode()<CR>
+noremap <leader>h <Esc>:call Easy_Mode()<CR>
+noremap <leader>H <Esc>:call Hard_Mode()<CR>
+call Hard_Mode()
 
 " Email syntax highlighting
 au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt* :set ft=mail
 
 " Set the status line the way i like it
-set stl=%f\ %m\ %r%{fugitive#statusline()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]
-
-let g:vimwiki_list = [{'path': '~/Dropbox/admin/cheat-sheet/', 'syntax': 'markdown', 'ext': '.md'}]
+set stl=%f\ %m\ %r%{fugitive#statusline()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]%=%{v:servername}
 
 " Convert MarkDown to HTML and show preview
 function! MarkdownPreview()
@@ -127,6 +140,9 @@ function! MarkdownPreview()
 	silent exec '!google-chrome ~/.vim/backup/scratch.html >> /dev/null'
 endfunction
 map <leader>m <Esc>:call MarkdownPreview()<CR>
+
+au BufRead,BufNewFile *.creole set filetype=creole
+au BufRead,BufNewFile *.wiki set filetype=creole
 
 " dbext directives
 source ~/.vim/db.vim

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Create TMUX session if it doesn't exist
-tmux list-session 2>&1 | grep -q "^PARROTT:" || tmux new-session -s PARROTT -d
+# It seems to only work from here :(
+if [ -f $HOME/.Xmodmap ]; then
+    /usr/bin/xmodmap $HOME/.Xmodmap
+fi
 
-tmux a -t PARROTT
+tmux a || tmux new

@@ -1,0 +1,16 @@
+keysym Control_R = Mode_switch
+keysym Left = Left NoSymbol Home
+keysym Up = Up NoSymbol Prior
+keysym Right = Right NoSymbol End
+keysym Down = Down NoSymbol Next
+keysym BackSpace = BackSpace NoSymbol Delete
+keysym Alt_R = Pointer_Button3 NoSymbol Pointer_Button2
+
+# keysym 67 = XF86Back
+# keysym 68 = XF86Forward
+# keysym 69 = XF86Refresh
+# keysym 72 = XF86MonBrightnessDown
+# keysym 73 = XF86MonBrightnessUp
+# keysym 74 = XF86AudioMute
+# keysym 75 = XF86AudioLowerVolume
+# keysym 76 = XF86AudioRaiseVolume

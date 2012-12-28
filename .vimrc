@@ -1,3 +1,4 @@
+set nocompatible
 set showtabline=1
 set wildmenu
 set wildmode=list:longest
@@ -6,18 +7,26 @@ set number
 set hidden
 set spelllang=en
 set nopaste
-set autoindent
 set fileformats=unix,dos
 set comments=sr:/*,mb:*,ex:*/
 set laststatus=2
 set nowb
-set cursorline
 set scrolloff=3
 set autochdir
 set linespace=0
 set diffopt+=horizontal
+set colorcolumn=80
+
 syntax enable
 filetype plugin indent on
+
+"Window
+set splitbelow
+set splitright
+nnoremap <C-w>" <Esc>:new<CR>
+nnoremap <C-w>% <Esc>:vnew<CR>
+nnoremap <C-w>{ <Esc>:wincmd r<CR>
+nnoremap <C-w>} <Esc>:wincmd r<CR>
 
 "Backup
 set backupdir=~/.vim/backup
@@ -25,10 +34,6 @@ set directory=~/.vim/backup
 
 "Marks
 set viminfo='100,f1
-
-"Folding
-"set foldmethod=indent
-"set foldlevel=1
 
 "Search
 set history=500 " keep 500 lines of command line history
@@ -40,92 +45,32 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
-nmap <silent> <leader>/ :nohlsearch<CR>
+nnoremap <silent> <leader>/ :nohlsearch<CR>
 
-" The final answer to the Tab Question
-set colorcolumn=80
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
-set expandtab
-set list listchars=tab:»·,trail:·
+nnoremap <leader>h <Esc>:call EasyMode()<CR>
+nnoremap <leader>H <Esc>:call HardMode()<CR>
 
-function! SwitchTab()
-    setlocal expandtab!
-endfunction
-vnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
-inoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
-nnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
-
-augroup wspace
-    autocmd!
-    " Visual warning about trailing whitespace and mixed up spacing
-    highlight ExtraWhitespace ctermbg=red guibg=red
-    match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
-    autocmd BufWinEnter * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
-    autocmd InsertEnter * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
-    autocmd InsertLeave * match ExtraWhitespace /\s\+$\| \+\t\|\t \+/
-    autocmd BufWinLeave * call clearmatches()
-augroup END
+let g:indentwizard_preferred_expandtab = 0
+let g:indentwizard_preferred_indent = 4
 
 " Check PHP syntax
 function! Php_lint()
     :1,$ w! ~/.vim/backup/lint.php
     :!php -l ~/.vim/backup/lint.php
 endfunction
-nnoremap <leader>r <Esc>:call Php_lint()<CR>
+nnoremap <leader>x <Esc>:call Php_lint()<CR>
+
+let g:phpcs_std_list="WordPress"
+nnoremap <leader>X <Esc>:Phpcs<CR>
 
 " Tags
 let Tlist_Ctags_Cmd = "/usr/bin/ctags"
 let Tlist_WinWidth = 50
 
 function! Tag_list()
-    :TlistToggle
+:TlistToggle
 endfunction
 nnoremap <leader>t <Esc>:call Tag_list()<CR>
-
-" Train myself to think and edit in patterns rather than characters
-noremap <Left> \
-noremap <Right> \
-noremap <Up> \
-noremap <Down> \
-noremap <PageUp> \
-noremap <PageDown> \
-
-inoremap <Left> <nop>
-inoremap <Right> <nop>
-inoremap <Up> <nop>
-inoremap <Down> <nop>
-inoremap <PageUp> <nop>
-inoremap <PageDown> <nop>
-
-noremap <CR> <nop>
-
-" nnoremap h <nop>
-" nnoremap j <nop>
-" nnoremap k <nop>
-" nnoremap l <nop>
-
-function! Hard_Mode()
-    nnoremap <buffer> h <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-    nnoremap <buffer> j <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-    nnoremap <buffer> k <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-    nnoremap <buffer> l <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-    nnoremap <buffer> - <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-    nnoremap <buffer> + <Esc>:echom "VIM: Hard Mode! (leader-h to exit)"<CR>
-endfunction
-function! Easy_Mode()
-    nnoremap <buffer> h h
-    nnoremap <buffer> j j
-    nnoremap <buffer> k k
-    nnoremap <buffer> l l
-    nnoremap <buffer> - -
-    nnoremap <buffer> + +
-    :echo "You are weak..."
-endfunction
-noremap <leader>h <Esc>:call Easy_Mode()<CR>
-noremap <leader>H <Esc>:call Hard_Mode()<CR>
-call Hard_Mode()
 
 " Email syntax highlighting
 au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt* :set ft=mail
@@ -139,7 +84,10 @@ function! MarkdownPreview()
 	silent exec '!php -f ~/.vim/scratch.php ~/.vim/backup/scratch.md > ~/.vim/backup/scratch.html'
 	silent exec '!google-chrome ~/.vim/backup/scratch.html >> /dev/null'
 endfunction
-map <leader>m <Esc>:call MarkdownPreview()<CR>
+map <leader>p <Esc>:call MarkdownPreview()<CR>
+
+map <leader>r <Esc>:reg<CR>
+map <leader>m <Esc>:marks<CR>
 
 au BufRead,BufNewFile *.creole set filetype=creole
 au BufRead,BufNewFile *.wiki set filetype=creole
@@ -147,15 +95,40 @@ au BufRead,BufNewFile *.wiki set filetype=creole
 " dbext directives
 source ~/.vim/db.vim
 
+" XDebug map keys
+nnoremap <leader>d1 :python debugger_resize()<cr>
+nnoremap <leader>d2 :python debugger_command('step_into')<cr>
+nnoremap <leader>d3 :python debugger_command('step_over')<cr>
+nnoremap <leader>d4 :python debugger_command('step_out')<cr>
+nnoremap <leader>d5 :call <SID>startDebugging()<cr>
+nnoremap <leader>d6 :call <SID>stopDebugging()<cr>
+nnoremap <leader>d7 :python debugger_context()<cr>
+nnoremap <leader>d8 :python debugger_property()<cr>
+nnoremap <leader>d7 :python debugger_watch_input("context_get")<cr>A<cr>
+nnoremap <leader>d8 :python debugger_watch_input("property_get", '<cword>')<cr>A<cr>
+nnoremap <leader>d0 :python debugger_watch_input("eval")<cr>A
+
 " rotating wallpaper!
-let g:wallpaper = 'pcmanfm --set-wallpaper=/home/matt/Dropbox/train/bg'
-nnoremap <leader>1 :execute '!'.g:wallpaper.'1'.'.png'<CR><CR>
-nnoremap <leader>2 :execute '!'.g:wallpaper.'2'.'.png'<CR><CR>
-nnoremap <leader>3 :execute '!'.g:wallpaper.'3'.'.png'<CR><CR>
-nnoremap <leader>4 :execute '!'.g:wallpaper.'4'.'.png'<CR><CR>
-nnoremap <leader>5 :execute '!'.g:wallpaper.'5'.'.png'<CR><CR>
-nnoremap <leader>6 :execute '!'.g:wallpaper.'6'.'.png'<CR><CR>
-nnoremap <leader>7 :execute '!'.g:wallpaper.'7'.'.png'<CR><CR>
-nnoremap <leader>8 :execute '!'.g:wallpaper.'8'.'.png'<CR><CR>
-nnoremap <leader>9 :execute '!'.g:wallpaper.'9'.'.png'<CR><CR>
-nnoremap <leader>0 :execute '!'.g:wallpaper.'0'.'.png'<CR><CR>
+let g:wallpaper = 'pcmanfm --set-wallpaper=$HOME/Dropbox/train/bg'
+nnoremap <leader>b1 :execute '!'.g:wallpaper.'1'.'.png'<CR><CR>
+nnoremap <leader>b2 :execute '!'.g:wallpaper.'2'.'.png'<CR><CR>
+nnoremap <leader>b3 :execute '!'.g:wallpaper.'3'.'.png'<CR><CR>
+nnoremap <leader>b4 :execute '!'.g:wallpaper.'4'.'.png'<CR><CR>
+nnoremap <leader>b5 :execute '!'.g:wallpaper.'5'.'.png'<CR><CR>
+nnoremap <leader>b6 :execute '!'.g:wallpaper.'6'.'.png'<CR><CR>
+nnoremap <leader>b7 :execute '!'.g:wallpaper.'7'.'.png'<CR><CR>
+nnoremap <leader>b8 :execute '!'.g:wallpaper.'8'.'.png'<CR><CR>
+nnoremap <leader>b9 :execute '!'.g:wallpaper.'9'.'.png'<CR><CR>
+nnoremap <leader>b0 :execute '!'.g:wallpaper.'0'.'.png'<CR><CR>
+
+" cheat sheets!
+nnoremap <leader>c1 :vsplit $HOME/Dropbox/train/cheat1.md<CR><CR>
+nnoremap <leader>c2 :vsplit $HOME/Dropbox/train/cheat2.md<CR><CR>
+nnoremap <leader>c3 :vsplit $HOME/Dropbox/train/cheat3.md<CR><CR>
+nnoremap <leader>c4 :vsplit $HOME/Dropbox/train/cheat4.md<CR><CR>
+nnoremap <leader>c5 :vsplit $HOME/Dropbox/train/cheat5.md<CR><CR>
+nnoremap <leader>c6 :vsplit $HOME/Dropbox/train/cheat6.md<CR><CR>
+nnoremap <leader>c7 :vsplit $HOME/Dropbox/train/cheat7.md<CR><CR>
+nnoremap <leader>c8 :vsplit $HOME/Dropbox/train/cheat8.md<CR><CR>
+nnoremap <leader>c9 :vsplit $HOME/Dropbox/train/cheat9.md<CR><CR>
+nnoremap <leader>c0 :vsplit $HOME/Dropbox/train/cheat0.md<CR><CR>

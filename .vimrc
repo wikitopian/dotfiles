@@ -17,6 +17,19 @@ set linespace=0
 set diffopt+=horizontal
 set colorcolumn=80
 
+" Manage all plugins with Vundle
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
+Bundle 'wikitopian/hardmode'
+Bundle 'wikitopian/indentwizard'
+Bundle 'vim-scripts/ShowMarks'
+Bundle 'vim-scripts/dbext.vim'
+Bundle 'mattn/webapi-vim'
+Bundle 'mattn/gist-vim'
+
 syntax enable
 filetype plugin indent on
 
@@ -35,6 +48,11 @@ set directory=~/.vim/backup
 "Marks
 set viminfo='100,f1
 
+"Gist
+let g:gist_detect_filetype = 1
+let g:gist_show_privates = 1
+let g:gist_post_private = 1
+
 "Search
 set history=500 " keep 500 lines of command line history
 set ignorecase		" ignores case
@@ -45,10 +63,12 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
+" lingering search result highlights are a pet peeve of mine
 nnoremap <silent> <leader>/ :nohlsearch<CR>
 
 nnoremap <leader>h <Esc>:call EasyMode()<CR>
 nnoremap <leader>H <Esc>:call HardMode()<CR>
+autocmd VimEnter,BufNewFile,BufReadPost * call HardMode()
 
 let g:indentwizard_preferred_expandtab = 0
 let g:indentwizard_preferred_indent = 4

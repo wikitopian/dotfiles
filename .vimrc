@@ -2,7 +2,6 @@ set nocompatible
 set showtabline=1
 set wildmenu
 set wildmode=list:longest
-set encoding=utf8
 set number
 set hidden
 set spelllang=en
@@ -16,6 +15,8 @@ set autochdir
 set linespace=0
 set diffopt+=horizontal
 set colorcolumn=80
+set encoding=utf-8
+set termencoding=utf-8
 
 " Manage all plugins with Vundle
 set rtp+=~/.vim/bundle/vundle/
@@ -29,6 +30,8 @@ Bundle 'vim-scripts/ShowMarks'
 Bundle 'vim-scripts/dbext.vim'
 Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
+Bundle 'ludovicPelle/vim-xdebug'
+Bundle 'plasticboy/vim-markdown'
 
 syntax enable
 filetype plugin indent on
@@ -52,6 +55,8 @@ set viminfo='100,f1
 let g:gist_detect_filetype = 1
 let g:gist_show_privates = 1
 let g:gist_post_private = 1
+
+let g:Powerline_symbols = 'fancy'
 
 "Search
 set history=500 " keep 500 lines of command line history

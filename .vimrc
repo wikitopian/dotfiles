@@ -32,6 +32,8 @@ Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
 Bundle 'ludovicPelle/vim-xdebug'
 Bundle 'plasticboy/vim-markdown'
+Bundle 'ludovicPelle/vim-xdebug'
+Bundle 'vim-scripts/taglist.vim'
 
 syntax enable
 filetype plugin indent on
@@ -43,6 +45,9 @@ nnoremap <C-w>" <Esc>:new<CR>
 nnoremap <C-w>% <Esc>:vnew<CR>
 nnoremap <C-w>{ <Esc>:wincmd r<CR>
 nnoremap <C-w>} <Esc>:wincmd r<CR>
+nnoremap <C-w>t <Esc>:tabnew<CR>
+nnoremap <C-w><Left> gT
+nnoremap <C-w><Right> gt
 
 "Backup
 set backupdir=~/.vim/backup
@@ -91,6 +96,8 @@ nnoremap <leader>X <Esc>:Phpcs<CR>
 " Tags
 let Tlist_Ctags_Cmd = "/usr/bin/ctags"
 let Tlist_WinWidth = 50
+
+set tags=~/.tags
 
 function! Tag_list()
 :TlistToggle

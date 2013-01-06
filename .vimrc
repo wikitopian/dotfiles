@@ -38,16 +38,33 @@ Bundle 'vim-scripts/taglist.vim'
 syntax enable
 filetype plugin indent on
 
-"Window
+" Window
 set splitbelow
 set splitright
-nnoremap <C-w>" <Esc>:new<CR>
-nnoremap <C-w>% <Esc>:vnew<CR>
-nnoremap <C-w>{ <Esc>:wincmd r<CR>
-nnoremap <C-w>} <Esc>:wincmd r<CR>
-nnoremap <C-w>t <Esc>:tabnew<CR>
-nnoremap <C-w><Left> gT
-nnoremap <C-w><Right> gt
+" Move pane to new tab
+nnoremap <C-w>o <Esc><C-w>t<CR>
+" Horizontal split
+nnoremap <C-w>- <Esc>:new<CR>
+" Vertical split
+nnoremap <C-w><Bar> <Esc>:vnew<CR>
+" Next tab
+nnoremap <C-w><Tab> <Esc>gt<CR>
+" Previous tab
+nnoremap <C-w><S-Tab> <Esc>gT<CR>
+" New tab
+nnoremap <C-w>n <Esc>:tabnew<CR>
+" Close current tab
+nnoremap <C-w>W <Esc>:tabclose<CR>
+" Close current pane
+nnoremap <C-w>w <Esc>:bd<CR>
+" Resize window horizontally smaller
+nnoremap <C-w><C-j> <Esc>:resize -1<CR>
+" Resize window horizontally larger
+nnoremap <C-w><C-j> <Esc>:resize +1<CR>
+" Resize window vertically smaller
+nnoremap <C-w><C-j> <Esc>:vertical resize -1<CR>
+" Resize window vertically larger
+nnoremap <C-w><C-j> <Esc>:vertical resize +1<CR>
 
 "Backup
 set backupdir=~/.vim/backup

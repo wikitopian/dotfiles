@@ -48,9 +48,9 @@ nnoremap <C-w>- <Esc>:new<CR>
 " Vertical split
 nnoremap <C-w><Bar> <Esc>:vnew<CR>
 " Next tab
-nnoremap <C-w><Tab> <Esc>gt<CR>
+nnoremap <C-w>t <Esc>gt<CR>
 " Previous tab
-nnoremap <C-w><S-Tab> <Esc>gT<CR>
+nnoremap <C-w>T <Esc>gT<CR>
 " New tab
 nnoremap <C-w>n <Esc>:tabnew<CR>
 " Close current tab
@@ -90,8 +90,8 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
-" lingering search result highlights are a pet peeve of mine
-nnoremap <silent> <leader>/ :nohlsearch<CR>
+" clear lingering search results
+nnoremap <silent> <C-l> :noh<CR><C-l>
 
 nnoremap <leader>h <Esc>:call EasyMode()<CR>
 nnoremap <leader>H <Esc>:call HardMode()<CR>

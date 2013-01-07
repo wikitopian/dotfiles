@@ -153,31 +153,6 @@ nnoremap <leader>d5 :call <SID>startDebugging()<cr>
 nnoremap <leader>d6 :call <SID>stopDebugging()<cr>
 nnoremap <leader>d7 :python debugger_context()<cr>
 nnoremap <leader>d8 :python debugger_property()<cr>
-nnoremap <leader>d7 :python debugger_watch_input("context_get")<cr>A<cr>
-nnoremap <leader>d8 :python debugger_watch_input("property_get", '<cword>')<cr>A<cr>
-nnoremap <leader>d0 :python debugger_watch_input("eval")<cr>A
-
-" rotating wallpaper!
-let g:wallpaper = 'pcmanfm --set-wallpaper=$HOME/Dropbox/train/bg'
-nnoremap <leader>b1 :execute '!'.g:wallpaper.'1'.'.png'<CR><CR>
-nnoremap <leader>b2 :execute '!'.g:wallpaper.'2'.'.png'<CR><CR>
-nnoremap <leader>b3 :execute '!'.g:wallpaper.'3'.'.png'<CR><CR>
-nnoremap <leader>b4 :execute '!'.g:wallpaper.'4'.'.png'<CR><CR>
-nnoremap <leader>b5 :execute '!'.g:wallpaper.'5'.'.png'<CR><CR>
-nnoremap <leader>b6 :execute '!'.g:wallpaper.'6'.'.png'<CR><CR>
-nnoremap <leader>b7 :execute '!'.g:wallpaper.'7'.'.png'<CR><CR>
-nnoremap <leader>b8 :execute '!'.g:wallpaper.'8'.'.png'<CR><CR>
-nnoremap <leader>b9 :execute '!'.g:wallpaper.'9'.'.png'<CR><CR>
-nnoremap <leader>b0 :execute '!'.g:wallpaper.'0'.'.png'<CR><CR>
-
-" cheat sheets!
-nnoremap <leader>c1 :vsplit $HOME/Dropbox/train/cheat1.md<CR><CR>
-nnoremap <leader>c2 :vsplit $HOME/Dropbox/train/cheat2.md<CR><CR>
-nnoremap <leader>c3 :vsplit $HOME/Dropbox/train/cheat3.md<CR><CR>
-nnoremap <leader>c4 :vsplit $HOME/Dropbox/train/cheat4.md<CR><CR>
-nnoremap <leader>c5 :vsplit $HOME/Dropbox/train/cheat5.md<CR><CR>
-nnoremap <leader>c6 :vsplit $HOME/Dropbox/train/cheat6.md<CR><CR>
-nnoremap <leader>c7 :vsplit $HOME/Dropbox/train/cheat7.md<CR><CR>
-nnoremap <leader>c8 :vsplit $HOME/Dropbox/train/cheat8.md<CR><CR>
-nnoremap <leader>c9 :vsplit $HOME/Dropbox/train/cheat9.md<CR><CR>
-nnoremap <leader>c0 :vsplit $HOME/Dropbox/train/cheat0.md<CR><CR>
+nnoremap <leader>d9 :python debugger_watch_input("context_get")<cr>A<cr>
+nnoremap <leader>d0 :python debugger_watch_input("property_get", '<cword>')<cr>A<cr>
+nnoremap <leader>d- :python debugger_watch_input("eval")<cr>A

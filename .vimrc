@@ -25,9 +25,9 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 Bundle 'wikitopian/hardmode'
-Bundle 'wikitopian/indentwizard'
+Bundle 'tpope/vim-sleuth'
 Bundle 'vim-scripts/ShowMarks'
-Bundle 'vim-scripts/dbext.vim'
+Bundle 'wikitopian/dbext.vim'
 Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
 Bundle 'ludovicPelle/vim-xdebug'
@@ -51,6 +51,10 @@ nnoremap <C-w><Bar> <Esc>:vnew<CR>
 nnoremap <C-w>t <Esc>gt<CR>
 " Previous tab
 nnoremap <C-w>T <Esc>gT<CR>
+" Next tab
+nnoremap <C-w><Right> <Esc>gt<CR>
+" Previous tab
+nnoremap <C-w><Left> <Esc>gT<CR>
 " New tab
 nnoremap <C-w>n <Esc>:tabnew<CR>
 " Close current tab
@@ -60,11 +64,11 @@ nnoremap <C-w>w <Esc>:bd<CR>
 " Resize window horizontally smaller
 nnoremap <C-w><C-j> <Esc>:resize -1<CR>
 " Resize window horizontally larger
-nnoremap <C-w><C-j> <Esc>:resize +1<CR>
+nnoremap <C-w><C-k> <Esc>:resize +1<CR>
 " Resize window vertically smaller
-nnoremap <C-w><C-j> <Esc>:vertical resize -1<CR>
+nnoremap <C-w><C-h> <Esc>:vertical resize -1<CR>
 " Resize window vertically larger
-nnoremap <C-w><C-j> <Esc>:vertical resize +1<CR>
+nnoremap <C-w><C-l> <Esc>:vertical resize +1<CR>
 
 "Backup
 set backupdir=~/.vim/backup

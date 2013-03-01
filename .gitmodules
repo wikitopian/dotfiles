@@ -1,6 +1,0 @@
-[submodule "wordpress-jquerymobile"]
-	path = wordpress-jquerymobile
-	url = git@github.com:wikitopian/wordpress-jquerymobile.git
-[submodule "WordPress"]
-	path = WordPress
-	url = git://github.com/WordPress/WordPress.git

@@ -38,6 +38,21 @@ Bundle 'vim-scripts/taglist.vim'
 syntax enable
 filetype plugin indent on
 
+" The final answer to the Tab Question
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+set list listchars=tab:»·,trail:·
+
+function! SwitchTab()
+    setlocal expandtab!
+endfunction
+vnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+inoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+nnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+
+
 " Window
 set splitbelow
 set splitright

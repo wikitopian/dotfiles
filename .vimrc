@@ -24,7 +24,7 @@ call vundle#rc()
 
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
-Bundle 'wikitopian/hardmode'
+Bundle 'kbarrette/mediummode'
 Bundle 'tpope/vim-sleuth'
 Bundle 'vim-scripts/ShowMarks'
 Bundle 'wikitopian/dbext.vim'
@@ -111,20 +111,6 @@ set smartcase		" search case sensitive if search contains caps
 
 " clear lingering search results
 nnoremap <silent> <C-l> :noh<CR><C-l>
-
-nnoremap <leader>h <Esc>:call EasyMode()<CR>
-nnoremap <leader>H <Esc>:call HardMode()<CR>
-autocmd VimEnter,BufNewFile,BufReadPost * call HardMode()
-
-let g:indentwizard_preferred_expandtab = 0
-let g:indentwizard_preferred_indent = 4
-
-" Check PHP syntax
-function! Php_lint()
-    :1,$ w! ~/.vim/backup/lint.php
-    :!php -l ~/.vim/backup/lint.php
-endfunction
-nnoremap <leader>x <Esc>:call Php_lint()<CR>
 
 let g:phpcs_std_list="WordPress"
 nnoremap <leader>X <Esc>:Phpcs<CR>

@@ -23,17 +23,14 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-Bundle 'tpope/vim-fugitive'
 Bundle 'kbarrette/mediummode'
-Bundle 'tpope/vim-sleuth'
 Bundle 'vim-scripts/ShowMarks'
 Bundle 'wikitopian/dbext.vim'
-Bundle 'mattn/webapi-vim'
-Bundle 'mattn/gist-vim'
 Bundle 'ludovicPelle/vim-xdebug'
 Bundle 'plasticboy/vim-markdown'
-Bundle 'ludovicPelle/vim-xdebug'
-Bundle 'vim-scripts/taglist.vim'
+Bundle 'joonty/vim-phpqa'
+Bundle 'wikitopian/jocktree'
+Bundle 'jamessan/vim-gnupg'
 
 syntax enable
 filetype plugin indent on
@@ -43,19 +40,24 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 set expandtab
-set list listchars=tab:»·,trail:·
+set list listchars=tab:»·,trail:·,precedes:<,extends:>
 
 function! SwitchTab()
-    setlocal expandtab!
+	setlocal expandtab!
 endfunction
 vnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
 inoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
 nnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
 
-
 " Window
 set splitbelow
 set splitright
+
+" Ctrl-w conflicts with Chromebook terminal
+nnoremap <Leader>w <C-w>
+
+" Make more like tmux
+
 " Move pane to new tab
 nnoremap <C-w>o <Esc><C-w>t<CR>
 " Horizontal split
@@ -112,52 +114,16 @@ set smartcase		" search case sensitive if search contains caps
 " clear lingering search results
 nnoremap <silent> <C-l> :noh<CR><C-l>
 
-let g:phpcs_std_list="WordPress"
-nnoremap <leader>X <Esc>:Phpcs<CR>
-
-" Tags
-let Tlist_Ctags_Cmd = "/usr/bin/ctags"
-let Tlist_WinWidth = 50
-
 set tags=~/.tags
 
-function! Tag_list()
-:TlistToggle
-endfunction
-nnoremap <leader>t <Esc>:call Tag_list()<CR>
-
-" Email syntax highlighting
+" Syntax highlighting
 au BufRead,BufNewFile .followup,.article,.letter,/tmp/pico*,nn.*,snd.*,/tmp/mutt* :set ft=mail
-
-" Set the status line the way i like it
-set stl=%f\ %m\ %r%{fugitive#statusline()}\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]%=%{v:servername}
-
-" Convert MarkDown to HTML and show preview
-function! MarkdownPreview()
-	silent exec ":1,$ w! ~/.vim/backup/scratch.md"
-	silent exec '!php -f ~/.vim/scratch.php ~/.vim/backup/scratch.md > ~/.vim/backup/scratch.html'
-	silent exec '!google-chrome ~/.vim/backup/scratch.html >> /dev/null'
-endfunction
-map <leader>p <Esc>:call MarkdownPreview()<CR>
-
-map <leader>r <Esc>:reg<CR>
-map <leader>m <Esc>:marks<CR>
-
 au BufRead,BufNewFile *.creole set filetype=creole
 au BufRead,BufNewFile *.wiki set filetype=creole
+
+set stl=%f\ %m\ %r\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]%=%{v:servername}
 
 " dbext directives
 source ~/.vim/db.vim
 
-" XDebug map keys
-nnoremap <leader>d1 :python debugger_resize()<cr>
-nnoremap <leader>d2 :python debugger_command('step_into')<cr>
-nnoremap <leader>d3 :python debugger_command('step_over')<cr>
-nnoremap <leader>d4 :python debugger_command('step_out')<cr>
-nnoremap <leader>d5 :call <SID>startDebugging()<cr>
-nnoremap <leader>d6 :call <SID>stopDebugging()<cr>
-nnoremap <leader>d7 :python debugger_context()<cr>
-nnoremap <leader>d8 :python debugger_property()<cr>
-nnoremap <leader>d9 :python debugger_watch_input("context_get")<cr>A<cr>
-nnoremap <leader>d0 :python debugger_watch_input("property_get", '<cword>')<cr>A<cr>
-nnoremap <leader>d- :python debugger_watch_input("eval")<cr>A
+let g:phpqa_codesniffer_args = "--standard=WordPress"

@@ -31,3 +31,5 @@
     untracked = cyan
 [github]
 	user = wikitopian
+[push]
+	default = simple

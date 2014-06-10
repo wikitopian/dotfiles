@@ -19,7 +19,7 @@ set encoding=utf-8
 set termencoding=utf-8
 
 " Manage all plugins with Vundle
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
@@ -29,7 +29,6 @@ Bundle 'wikitopian/dbext.vim'
 Bundle 'ludovicPelle/vim-xdebug'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'joonty/vim-phpqa'
-Bundle 'wikitopian/jocktree'
 Bundle 'jamessan/vim-gnupg'
 
 syntax enable
@@ -55,8 +54,6 @@ set splitright
 
 " Ctrl-w conflicts with Chromebook terminal
 nnoremap <Leader>w <C-w>
-
-" Make more like tmux
 
 " Move pane to new tab
 nnoremap <C-w>o <Esc><C-w>t<CR>
@@ -93,13 +90,6 @@ set directory=~/.vim/backup
 
 "Marks
 set viminfo='100,f1
-
-"Gist
-let g:gist_detect_filetype = 1
-let g:gist_show_privates = 1
-let g:gist_post_private = 1
-
-let g:Powerline_symbols = 'fancy'
 
 "Search
 set history=500 " keep 500 lines of command line history

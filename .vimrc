@@ -18,6 +18,8 @@ set colorcolumn=80
 set encoding=utf-8
 set termencoding=utf-8
 
+colorscheme elflord
+
 " Manage all plugins with Vundle
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
@@ -26,6 +28,7 @@ Bundle 'gmarik/vundle'
 Bundle 'wikitopian/dbext.vim'
 Bundle 'joonty/vim-phpqa.git'
 Bundle 'joonty/vdebug.git'
+Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 syntax enable
 filetype plugin indent on
@@ -113,3 +116,11 @@ set stl=%f\ %m\ %r\ Line:%l/%L[%p%%]\ Col:%v\ Buf:#%n\ [%b][0x%B]%=%{v:servernam
 source ~/.vim/db.vim
 
 let g:phpqa_codesniffer_args = "--standard=WordPress"
+
+set guifont=Inconsolata
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
+set term=xterm-256color
+set termencoding=utf-8

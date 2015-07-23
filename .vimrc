@@ -23,13 +23,9 @@ set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-Bundle 'kbarrette/mediummode'
-Bundle 'vim-scripts/ShowMarks'
 Bundle 'wikitopian/dbext.vim'
-Bundle 'ludovicPelle/vim-xdebug'
-Bundle 'plasticboy/vim-markdown'
-Bundle 'joonty/vim-phpqa'
-Bundle 'jamessan/vim-gnupg'
+Bundle 'joonty/vim-phpqa.git'
+Bundle 'joonty/vdebug.git'
 
 syntax enable
 filetype plugin indent on

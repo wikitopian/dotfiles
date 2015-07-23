@@ -2,7 +2,7 @@
     editor = vim
 [user]
     name = wikitopian
-    email = matt@swarmstrategies.com
+    email = parrott.matt@gmail.com
 [merge]
     tool = vimdiff
 [diff]

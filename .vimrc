@@ -53,9 +53,6 @@ set splitright
 set winwidth=80
 set winminwidth=50
 
-" Ctrl-w conflicts with Chromebook terminal
-nnoremap <Leader>w <C-w>
-
 "Backup
 set backupdir=~/.vim/backup
 set directory=~/.vim/backup

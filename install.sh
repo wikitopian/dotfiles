@@ -7,6 +7,6 @@ git clone git@github.com:VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 touch ~/.vim/db.vim
 
-ln -s .tmux.conf ~/.tmux.conf
-ln -s .vimrc ~/.vimrc
-ln -s .gitconfig ~/.vimrc
+ln .tmux.conf $HOME/.tmux.conf
+ln .vimrc $HOME/.vimrc
+ln .gitconfig $HOME/.gitconfig

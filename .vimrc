@@ -24,11 +24,8 @@ colorscheme elflord
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
+Bundle 'VundleVim/Vundle.vim'
 Bundle 'wikitopian/dbext.vim'
-Bundle 'joonty/vim-phpqa.git'
-Bundle 'joonty/vdebug.git'
-Bundle 'vim-scripts/taglist.vim'
 
 syntax enable
 filetype plugin indent on
@@ -74,5 +71,3 @@ set tags=~/.tags
 
 " dbext directives
 source ~/.vim/db.vim
-
-let g:phpqa_codesniffer_args = "--standard=WordPress"

@@ -64,6 +64,9 @@ set showmode		" show current mode
 set showmatch		" show matching bookends
 set smartcase		" search case sensitive if search contains caps
 
+" for vi mode syntax hightlighting
+au BufRead,BufNewFile bash-fc-* set filetype=sh
+
 " clear lingering search results
 nnoremap <silent> <C-l> :noh<CR><C-l>
 

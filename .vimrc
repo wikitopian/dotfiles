@@ -20,15 +20,20 @@ set termencoding=utf-8
 
 colorscheme elflord
 
-" Manage all plugins with Vundle
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
 
-Bundle 'VundleVim/Vundle.vim'
-Bundle 'wikitopian/dbext.vim'
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-dadbod'
+Plugin 'tpope/vim-vinegar'
+Plugin 'gcmt/taboo.vim'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'takac/vim-hardtime'
+
+call vundle#end()
+filetype plugin indent on
 
 syntax enable
-filetype plugin indent on
 
 " The final answer to the Tab Question
 set shiftwidth=4
@@ -43,6 +48,9 @@ endfunction
 vnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
 inoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
 nnoremap <Leader><tab> <Esc>:call SwitchTab()<CR>
+
+nnoremap <Leader>, <Esc>:TabooRename<Space>
+vnoremap <Leader>, <Esc>:TabooRename<Space>
 
 " Window
 set splitbelow
@@ -72,5 +80,5 @@ nnoremap <silent> <C-l> :noh<CR><C-l>
 
 set tags=~/.tags
 
-" dbext directives
-source ~/.vim/db.vim
+" dadbod directives
+source ~/.vim/dadbod.vim

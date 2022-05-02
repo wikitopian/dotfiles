@@ -1,4 +1,7 @@
 #!/bin/bash
 
 ln tmux.conf $HOME/.tmux.conf
-ln vimrc $HOME/.vimrc
+
+mkdir -p $HOME/.config/nvim
+
+ln init.vim $HOME/.config/nvim/init.vim

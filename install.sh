@@ -2,6 +2,14 @@
 
 ln tmux.conf $HOME/.tmux.conf
 
-mkdir -p $HOME/.config/nvim
+ln vimrc $HOME/.vimrc
 
-ln init.vim $HOME/.config/nvim/init.vim
+mkdir $HOME/repo
+
+touch $HOME/repo/dadbod.vim
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+git config --global diff.tool vimdiff
+git config --global merge.tool vimdiff

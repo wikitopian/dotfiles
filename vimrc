@@ -1,11 +1,10 @@
 call plug#begin()
 
+Plug 'folke/tokyonight.nvim'
 Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-vinegar'
 Plug 'github/copilot.vim'
-Plug 'zivyangll/git-blame.vim'
 
 call plug#end()
 
@@ -13,10 +12,9 @@ set backupdir=~/.vim/backup/
 set directory=~/.vim/backup/
 set undodir=~/.vim/backup/
 
+set colorscheme=industry
 set colorcolumn=81
 set number
-
-nnoremap <Leader>b :<C-u>call gitblame#echo()<CR>
 
 " The final answer to the Tab Question
 set shiftwidth=2

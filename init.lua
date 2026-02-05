@@ -147,3 +147,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   end,
 })
+
+-- Toggle between soft tabs (expandtab) and hard tabs (noexpandtab)
+vim.keymap.set('n', '<leader><tab>', function()
+  if vim.opt.expandtab:get() then
+    vim.opt.expandtab = false
+    print("Hard Tabs")
+  else
+    vim.opt.expandtab = true
+    print("Soft Tabs (2 spaces)")
+  end
+end, { desc = 'Toggle soft/hard tabs' })

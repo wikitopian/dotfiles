@@ -15,6 +15,7 @@ vim.opt.listchars = {
   lead = "·",
   nbsp = "␣",
 }
+vim.opt.colorcolumn = "81,101,121"
 
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM

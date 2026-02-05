@@ -50,6 +50,16 @@ require("lazy").setup({
   },
 
   -- LSP & Treesitter (The Brains)
+  {
+    "williamboman/mason.nvim",
+    opts = {},
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = { "vtsls", "eslint", "biome" },
+    },
+  },
   { "neovim/nvim-lspconfig" },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -112,9 +122,20 @@ require("lazy").setup({
 })
 
 -- ========================================================================== --
--- 4. LSP CONFIGURATION (The Native 0.11 Way)
+-- 4. LSP CONFIGURATION
 -- ========================================================================== --
--- This enables Biome (or any other server) natively
+local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+-- TypeScript (vtsls)
+vim.lsp.config('vtsls', { capabilities = capabilities })
+vim.lsp.enable('vtsls')
+
+-- ESLint
+vim.lsp.config('eslint', { capabilities = capabilities })
+vim.lsp.enable('eslint')
+
+-- Biome (Only starts if biome.json is present)
+vim.lsp.config('biome', { capabilities = capabilities })
 vim.lsp.enable('biome')
 
 -- Create Keybindings when LSP attaches
@@ -123,5 +144,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = args.buf }
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
   end,
 })

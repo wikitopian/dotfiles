@@ -18,6 +18,8 @@ vim.opt.rtp:prepend(lazypath)
 
 -- 3. PLUGIN SPECIFICATIONS
 require("lazy").setup({
+  { "nvim-lua/plenary.nvim" },
+
   -- LSP & Mason (Installer)
   { "williamboman/mason.nvim", config = true },
   { "neovim/nvim-lspconfig" },
@@ -26,7 +28,9 @@ require("lazy").setup({
   {
     "saghen/blink.cmp",
     version = "*",
-    dependencies = { "milanglacier/minuet-ai.nvim" },
+    dependencies = {
+	"milanglacier/minuet-ai.nvim",
+	"nvim-lua/plenary.nvim" },
     opts = {
       keymap = { preset = "default" },
       sources = {
@@ -51,8 +55,10 @@ require("lazy").setup({
       provider_options = {
         gemini = {
           model = "gemini-2.0-flash",
-          system = "Provide concise, terse, modern, standard code completions.",
-        },
+          system = {
+		prompt = "Provide concise, terse, modern, standard code completions.",
+          },
+	},
       },
     },
   },
@@ -76,11 +82,18 @@ require("lazy").setup({
   { "kristijanhusak/vim-dadbod-ui", dependencies = { "tpope/vim-dadbod" } },
 })
 
--- 4. LSP SETUP (BIOME & OTHERS)
-local lspconfig = require("lspconfig")
+-- 4. LSP SETUP (The 0.11+ Native Way)
+-- nvim-lspconfig provides the 'biome' template automatically
+-- We just need to define/modify it and enable it.
 
--- Biome automatically detects biome.json in your project root
-lspconfig.biome.setup({})
+-- 1. Configure it (This is where you'd add custom settings/root markers)
+vim.lsp.config('biome', {
+  -- Neovim 0.11+ will automatically merge this with the 
+  -- defaults from the nvim-lspconfig plugin.
+})
+
+-- 2. Enable it (This replaces the old .setup() call)
+vim.lsp.enable('biome')
 
 -- 5. KEYMAPS
 -- Manual format trigger (since you hate auto-writes)

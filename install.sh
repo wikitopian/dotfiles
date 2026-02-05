@@ -1,11 +1,18 @@
 #!/bin/bash
 
-ln tmux.conf $HOME/.tmux.conf
+# Ensure target directories exist
+mkdir -p "$HOME/.config/nvim"
 
-mkdir -p $HOME/.config/nvim
-ln init.lua $HOME/.config/nvim/init.lua
+# Link tmux.conf
+rm -f "$HOME/.tmux.conf" # Remove existing file if it's there
+ln tmux.conf "$HOME/.tmux.conf"
 
-mkdir -p $HOME/repo
+# Link init.lua
+# Remove existing file if it's there to ensure hard link creation
+rm -f "$HOME/.config/nvim/init.lua" 
+ln init.lua "$HOME/.config/nvim/init.lua"
+
+mkdir -p "$HOME/repo"
 
 git config --global diff.tool vimdiff
 git config --global merge.tool vimdiff

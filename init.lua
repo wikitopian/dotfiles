@@ -7,6 +7,7 @@ vim.opt.termguicolors = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.smartindent = true
 
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM
@@ -31,15 +32,15 @@ require("lazy").setup({
   -- LSP & Treesitter (The Brains)
   { "neovim/nvim-lspconfig" },
   {
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  -- Using 'opts' instead of 'config = function()...' is safer for first-time installs
-  opts = {
-  ensure_installed = { "lua", "vim", "vimdoc", "javascript", "typescript", "markdown", "json", "html", "css", "bash" },
-  highlight = { enable = true },
-  },
-  -- This 'main' key tells Lazy which module to use for the opts above
-  main = "nvim-treesitter.configs",
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = { "lua", "vim", "vimdoc", "javascript", "typescript", "markdown", "json", "html", "css", "bash" },
+      highlight = { enable = true },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter.config").setup(opts)
+    end,
   },
 
   -- AI Completion (Gemini)

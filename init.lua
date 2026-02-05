@@ -89,7 +89,6 @@ require("lazy").setup({
       },
     },
   },
-  { "vimpostor/vim-tpipeline" }, -- The Tmux "Magic" Bar
 })
 
 -- ========================================================================== --

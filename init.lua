@@ -17,6 +17,18 @@ vim.opt.listchars = {
 }
 vim.opt.colorcolumn = "81,101,121"
 
+-- Enable autoread to reload files changed outside Neovim
+vim.opt.autoread = true
+
+-- Trigger checktime to detect changes when focus returns to Neovim or the buffer is entered
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  callback = function()
+    if vim.fn.getcmdwintype() == "" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM
 -- ========================================================================== --
@@ -80,7 +92,7 @@ require("lazy").setup({
       provider = "gemini",
       provider_options = {
         gemini = {
-          model = "gemini-2.0-flash",
+          model = "gemini-2.5-flash",
           system = {
             prompt = "You are a developer. Write concise, terse, modern, standard code.",
           },

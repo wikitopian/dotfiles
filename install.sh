@@ -12,6 +12,8 @@ ln tmux.conf "$HOME/.tmux.conf"
 rm -f "$HOME/.config/nvim/init.lua" 
 ln init.lua "$HOME/.config/nvim/init.lua"
 
+mkdir -p "$HOME/.cache/nvim/swap"
+
 mkdir -p "$HOME/repo"
 
 git config --global diff.tool vimdiff

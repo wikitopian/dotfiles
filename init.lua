@@ -29,6 +29,8 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
   end,
 })
 
+vim.o.directory = "~/.cache/nvim/swap//"
+
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM
 -- ========================================================================== --
@@ -85,21 +87,30 @@ require("lazy").setup({
     end,
   },
 
-  -- AI Completion (Gemini)
+  -- AI Completion (Ollama)
   {
     "milanglacier/minuet-ai.nvim",
     opts = {
-      provider = "gemini",
+      provider = "openai_compatible",
       provider_options = {
-        gemini = {
-          model = "gemini-2.5-flash",
-          system = {
-            prompt = "You are a developer. Write concise, terse, modern, standard code.",
+        openai_compatible = {
+          model = "qwen3-coder:30b",
+          end_point = "http://192.168.0.88:11434/v1/chat/completions",
+          name = "Ollama",
+          stream = true,
+          api_key = "TERM",
+          optional = {
+            max_tokens = 512,
+            top_p = 0.9,
           },
         },
       },
     },
   },
+
+
+
+
 
   -- Completion Engine (Blink)
   {
@@ -107,13 +118,18 @@ require("lazy").setup({
     version = "*",
     opts = {
       keymap = { preset = 'default' },
+      completion = {
+        trigger = {
+          show_on_keyword = false,
+          show_on_trigger_character = false,
+        },
+      },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
         providers = {
           minuet = {
             name = 'minuet',
             module = 'minuet.blink',
-            score_offset = 8,
           },
         },
       },

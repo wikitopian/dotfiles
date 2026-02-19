@@ -16,11 +16,12 @@ vim.opt.listchars = {
   nbsp = "␣",
 }
 vim.opt.colorcolumn = "81,101,121"
+vim.opt.confirm = true
 
--- Enable autoread to reload files changed outside Neovim
+-- Enable autoread
 vim.opt.autoread = true
 
--- Trigger checktime to detect changes when focus returns to Neovim or the buffer is entered
+-- Reload files on focus
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
   callback = function()
     if vim.fn.getcmdwintype() == "" then
@@ -29,16 +30,59 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
   end,
 })
 
-vim.o.directory = "~/.cache/nvim/swap//"
+-- Persistence & Directories
+vim.opt.undofile = true
+local cache_dir = vim.fn.expand("~/.cache/nvim/")
+local dirs = {
+  swap = cache_dir .. "swap//",
+  undo = cache_dir .. "undo//",
+  backup = cache_dir .. "backup//",
+}
+
+for _, d in pairs(dirs) do
+  local path = d:match("(.*)//") or d
+  if vim.fn.isdirectory(path) == 0 then
+    vim.fn.mkdir(path, "p")
+  end
+end
+
+vim.opt.directory = dirs.swap
+vim.opt.undodir = dirs.undo
+vim.opt.backupdir = dirs.backup
+
+-- Disable swap files in headless/embedded instances to avoid aider-pop collisions
+if #vim.api.nvim_list_uis() == 0 then
+  vim.opt.swapfile = false
+end
+
+-- Native Wildmenu
+vim.opt.wildmenu = true
+vim.opt.wildoptions = "pum"
+vim.opt.wildmode = "longest:full,full"
+vim.opt.wildignorecase = true
+vim.opt.wildignore:append({ "*/node_modules/*", "*/.git/*", "*/vendor/*" })
+
+-- Shim for Neovim 0.11 Treesitter changes (Telescope Compatibility)
+if not vim.treesitter.parsers then
+  vim.treesitter.parsers = {
+    ft_to_lang = function(ft)
+      return (vim.treesitter.language and vim.treesitter.language.get_lang(ft)) or ft
+    end,
+  }
+end
 
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM
 -- ========================================================================== --
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath,
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
@@ -50,6 +94,39 @@ require("lazy").setup({
   -- Core Libraries
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
+
+  -- Fuzzy Finder
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = function()
+      local actions = require("telescope.actions")
+      return {
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+              ["<A-b>"] = actions.close, -- Toggle off with Alt-b
+            },
+            n = {
+              ["<A-b>"] = actions.close, -- Toggle off with Alt-b
+            },
+          },
+        },
+      }
+    end,
+  },
+
+  -- Aider Integration
+  {
+    "possumtech/aider-pop.nvim",
+    lazy = false,
+    opts = {
+      statusline = false,
+      sync_buffers = true,
+    },
+  },
 
   -- Theme
   {
@@ -63,16 +140,11 @@ require("lazy").setup({
     end,
   },
 
-  -- LSP & Treesitter (The Brains)
-  {
-    "williamboman/mason.nvim",
-    opts = {},
-  },
+  -- LSP & Treesitter
+  { "williamboman/mason.nvim", opts = {} },
   {
     "williamboman/mason-lspconfig.nvim",
-    opts = {
-      ensure_installed = { "vtsls", "eslint", "biome" },
-    },
+    opts = { ensure_installed = { "vtsls", "eslint", "biome" } },
   },
   { "neovim/nvim-lspconfig" },
   {
@@ -87,102 +159,132 @@ require("lazy").setup({
     end,
   },
 
-  -- AI Completion (Ollama)
+  -- Copilot (Ghost Suggestions)
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    opts = {
+      suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          accept = "<C-y>",
+          next = "<M-]>",
+          prev = "<M-[>",
+          dismiss = "<C-]>",
+        },
+      },
+      panel = { enabled = false },
+    },
+  },
+
+  -- AI Completion Menu (Grok)
   {
     "milanglacier/minuet-ai.nvim",
     opts = {
+      virtualtext = { enable = false },
+      throttle = 200,
+      debounce = 200,
       provider = "openai_compatible",
       provider_options = {
         openai_compatible = {
-          model = "qwen3-coder:30b",
-          end_point = "http://192.168.0.88:11434/v1/chat/completions",
-          name = "Ollama",
+          model = "grok-code-fast-1",
+          end_point = "https://api.x.ai/v1/chat/completions",
+          name = "Grok",
           stream = true,
-          api_key = "TERM",
-          optional = {
-            max_tokens = 512,
-            top_p = 0.9,
-          },
+          api_key = "XAI_API_KEY",
+          optional = { max_tokens = 512, top_p = 0.9 },
         },
       },
     },
   },
-
-
-
-
 
   -- Completion Engine (Blink)
   {
     "saghen/blink.cmp",
     version = "*",
     opts = {
-      keymap = { preset = 'default' },
-      completion = {
-        trigger = {
-          show_on_keyword = false,
-          show_on_trigger_character = false,
-        },
-      },
+      keymap = { preset = "default" },
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer', 'minuet' },
+        default = { "lsp", "path", "snippets", "buffer", "minuet" },
         providers = {
           minuet = {
-            name = 'minuet',
-            module = 'minuet.blink',
+            name = "minuet",
+            module = "minuet.blink",
+            score_offset = 100,
           },
         },
       },
     },
   },
 
-  -- Powerline Buffoonery (Lualine + Tmux integration)
+  -- Statusline
   {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
         theme = "auto",
         globalstatus = true,
-        section_separators = { left = '', right = '' },
+        section_separators = { left = "", right = "" },
+      },
+      sections = {
+        lualine_x = {
+          { function() return require("aider-pop").status() end },
+          "encoding", "fileformat", "filetype",
+        },
       },
     },
   },
 })
 
 -- ========================================================================== --
--- 4. LSP CONFIGURATION
+-- 4. LSP & KEYBINDINGS (MODERN 0.11+)
 -- ========================================================================== --
-local capabilities = require('blink.cmp').get_lsp_capabilities()
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
--- TypeScript (vtsls)
-vim.lsp.config('vtsls', { capabilities = capabilities })
-vim.lsp.enable('vtsls')
+-- Native Neovim 0.11 LSP API
+-- Note: nvim-lspconfig provides the configurations automatically
+vim.lsp.config("vtsls", { capabilities = capabilities })
+vim.lsp.enable("vtsls")
 
--- ESLint
-vim.lsp.config('eslint', { capabilities = capabilities })
-vim.lsp.enable('eslint')
+vim.lsp.config("eslint", { capabilities = capabilities })
+vim.lsp.enable("eslint")
 
--- Biome (Only starts if biome.json is present)
-vim.lsp.config('biome', { capabilities = capabilities })
-vim.lsp.enable('biome')
+vim.lsp.config("biome", {
+  capabilities = capabilities,
+  root_dir = vim.fs.root(0, { "biome.json", "biome.jsonc" }),
+})
+vim.lsp.enable("biome")
 
--- Create Keybindings when LSP attaches
-vim.api.nvim_create_autocmd('LspAttach', {
+-- Standard way to set up LSP keybindings in 0.11+
+vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local opts = { buffer = args.buf }
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   end,
 })
 
--- Toggle between soft tabs (expandtab) and hard tabs (noexpandtab)
-vim.keymap.set('n', '<leader><tab>', function()
-  if vim.opt.expandtab:get() then
-    vim.opt.expandtab = false
-    print("Hard Tabs")
-  else
-    vim.opt.expandtab = true
-    print("Soft Tabs (2 spaces)")
-  end
-end, { desc = 'Toggle soft/hard tabs' })
+-- Global Keybindings
+local map = vim.keymap.set
+
+-- Navigation
+map("n", "<A-b>", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
+map("n", "<leader>b", "<cmd>Telescope buffers<cr>", { desc = "Find Buffer" })
+map("n", "<leader>f", "<cmd>Telescope find_files<cr>", { desc = "Find File" })
+map("n", "<leader>s", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
+map("n", "<leader>d", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
+map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+
+-- Aider
+map("n", "<A-a>", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
+map("n", "<leader>a", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
+
+-- UI Toggles
+map("n", "<leader><tab>", function()
+  vim.opt.expandtab = not vim.opt.expandtab:get()
+  print(vim.opt.expandtab:get() and "Soft Tabs (2 spaces)" or "Hard Tabs")
+end, { desc = "Toggle Tabs" })

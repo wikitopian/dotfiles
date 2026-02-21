@@ -179,27 +179,6 @@ require("lazy").setup({
     },
   },
 
-  -- AI Completion Menu (Grok)
-  {
-    "milanglacier/minuet-ai.nvim",
-    opts = {
-      virtualtext = { enable = false },
-      throttle = 200,
-      debounce = 200,
-      provider = "openai_compatible",
-      provider_options = {
-        openai_compatible = {
-          model = "grok-code-fast-1",
-          end_point = "https://api.x.ai/v1/chat/completions",
-          name = "Grok",
-          stream = true,
-          api_key = "XAI_API_KEY",
-          optional = { max_tokens = 512, top_p = 0.9 },
-        },
-      },
-    },
-  },
-
   -- Completion Engine (Blink)
   {
     "saghen/blink.cmp",
@@ -207,14 +186,7 @@ require("lazy").setup({
     opts = {
       keymap = { preset = "default" },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer", "minuet" },
-        providers = {
-          minuet = {
-            name = "minuet",
-            module = "minuet.blink",
-            score_offset = 100,
-          },
-        },
+        default = { "lsp", "path", "snippets", "buffer" },
       },
     },
   },
@@ -275,9 +247,8 @@ map("n", "<A-b>", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
 map("n", "<leader>b", "<cmd>Telescope buffers<cr>", { desc = "Find Buffer" })
 map("n", "<leader>f", "<cmd>Telescope find_files<cr>", { desc = "Find File" })
 map("n", "<leader>s", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
-map("n", "<leader>d", "<cmd>bdelete<cr>", { desc = "Delete Buffer" })
-map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+map("n", "<Left>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "<Right>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
 -- Aider
 map("n", "<A-a>", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })

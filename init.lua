@@ -71,6 +71,11 @@ if not vim.treesitter.parsers then
   }
 end
 
+-- Netrw Configuration (Sidebar)
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 25
+
 -- ========================================================================== --
 -- 2. BOOTSTRAP LAZY.NVIM
 -- ========================================================================== --
@@ -244,15 +249,22 @@ local map = vim.keymap.set
 
 -- Navigation
 map("n", "<A-b>", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
-map("n", "<leader>b", "<cmd>Telescope buffers<cr>", { desc = "Find Buffer" })
-map("n", "<leader>f", "<cmd>Telescope find_files<cr>", { desc = "Find File" })
-map("n", "<leader>s", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
+map("n", "<A-s>", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
 map("n", "<Left>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<Right>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
+-- Netrw Sidebar
+map("n", "<A-f>", function()
+  -- Toggle netrw (Lexplore)
+  if vim.g.netrw_liststyle == 3 and vim.fn.exists("t:netrw_lexbufnr") == 1 then
+    vim.cmd("Lexplore")
+  else
+    vim.cmd("Lexplore 30")
+  end
+end, { desc = "Toggle netrw Sidebar" })
+
 -- Aider
 map("n", "<A-a>", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
-map("n", "<leader>a", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
 
 -- UI Toggles
 map("n", "<leader><tab>", function()

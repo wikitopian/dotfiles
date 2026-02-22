@@ -49,6 +49,7 @@ end
 vim.opt.directory = dirs.swap
 vim.opt.undodir = dirs.undo
 vim.opt.backupdir = dirs.backup
+vim.opt.swapfile = false
 
 -- Disable swap files in headless/embedded instances to avoid aider-pop collisions
 if #vim.api.nvim_list_uis() == 0 then

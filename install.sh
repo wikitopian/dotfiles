@@ -4,13 +4,14 @@
 mkdir -p "$HOME/.config/nvim"
 
 # Link tmux.conf
-rm -f "$HOME/.tmux.conf" # Remove existing file if it's there
-ln tmux.conf "$HOME/.tmux.conf"
+# Use symbolic link so changes in repo are reflected immediately
+rm -f "$HOME/.tmux.conf"
+ln -sf "$PWD/tmux.conf" "$HOME/.tmux.conf"
 
 # Link init.lua
-# Remove existing file if it's there to ensure hard link creation
+# Use symbolic link so changes in repo are reflected immediately
 rm -f "$HOME/.config/nvim/init.lua" 
-ln init.lua "$HOME/.config/nvim/init.lua"
+ln -sf "$PWD/init.lua" "$HOME/.config/nvim/init.lua"
 
 mkdir -p "$HOME/.cache/nvim/swap"
 

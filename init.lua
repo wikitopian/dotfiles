@@ -207,6 +207,7 @@ require("lazy").setup({
         section_separators = { left = "", right = "" },
       },
       sections = {
+        lualine_b = { { "filename", path = 2 } },
         lualine_x = {
           { function() return require("aider-pop").status() end },
           "encoding", "fileformat", "filetype",

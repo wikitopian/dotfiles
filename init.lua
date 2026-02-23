@@ -249,14 +249,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- Global Keybindings
 local map = vim.keymap.set
 
+-- Aider
+map("n", "<Leader>a", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
+
 -- Navigation
-map("n", "<A-b>", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
-map("n", "<A-s>", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
+map("n", "<Leader>b", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
+map("n", "<Leader>s", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
 map("n", "<Left>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<Right>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
 -- Netrw Sidebar
-map("n", "<A-f>", function()
+map("n", "<Leader>f", function()
   -- Toggle netrw (Lexplore)
   if vim.g.netrw_liststyle == 3 and vim.fn.exists("t:netrw_lexbufnr") == 1 then
     vim.cmd("Lexplore")
@@ -264,9 +267,6 @@ map("n", "<A-f>", function()
     vim.cmd("Lexplore 30")
   end
 end, { desc = "Toggle netrw Sidebar" })
-
--- Aider
-map("n", "<A-a>", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
 
 -- UI Toggles
 map("n", "<leader><tab>", function()

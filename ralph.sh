@@ -51,12 +51,12 @@ while [ $OUTER_COUNT -lt $LIMIT ]; do
           --weak-model "$WEAK_ALIAS" \
           --no-stream \
           --no-suggest-shell-commands \
-          --auto-test \
+          --test \
           --yes \
-          --exit \
-          --message "Identify the root cause of test failures and implement a structural fix. If tests pass, exit."
+          --message "Identify the root cause of test failures and implement a structural fix."
 
-    if [ $? -eq 0 ]; then
+    # Explicit check of the test result
+    if eval "$TEST_CMD" > /dev/null 2>&1; then
         echo "✅ RALPH: Fixed by Architect in pass $OUTER_COUNT."
         [ -n "$TMUX" ] && tmux display-message "✅ RALPH: Success (Arch $OUTER_COUNT)"
         exit 0
@@ -81,12 +81,12 @@ while [ $OUTER_COUNT -lt $LIMIT ]; do
         aider --model "$WEAK_ALIAS" \
               --no-stream \
               --no-suggest-shell-commands \
-              --auto-test \
+              --test \
               --yes \
-              --exit \
-              --message "Fix remaining test failures. Focus on implementation details. If tests pass, exit."
+              --message "Fix remaining test failures. Focus on implementation details."
 
-        if [ $? -eq 0 ]; then
+        # Explicit check of the test result
+        if eval "$TEST_CMD" > /dev/null 2>&1; then
             echo "✅ RALPH: Fixed by Refiner (Arch $OUTER_COUNT, Refine $REF_COUNT)."
             [ -n "$TMUX" ] && tmux display-message "✅ RALPH: Success (Refine $REF_COUNT)"
             exit 0

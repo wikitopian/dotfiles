@@ -17,6 +17,9 @@ MD5_CMD=$(command -v md5 || command -v md5sum)
 # Extract test command from config (handling potential quotes and spaces)
 TEST_CMD=$(grep "^[[:space:]]*test-cmd:" "$CONFIG_FILE" | sed -E 's/^[[:space:]]*test-cmd:[[:space:]]*//;s/^["'\'']//;s/["'\'']$//')
 
+# Guardrails to prevent the LLM from "cheating" or breaking the environment
+GUARDS="CRITICAL: Do NOT modify test files or assertions. Do NOT modify package.json, configuration files, or environment settings under any circumstances. Fix the implementation code ONLY."
+
 echo "🤖 RALPH: Nested Refinement"
 echo "📊 Limits: Arch $LIMIT | Refine $MAX_REFINES"
 echo "🧠 Architect: $ARCH_ALIAS | ✍️ Editor: $EDIT_ALIAS | 🐚 Weak: $WEAK_ALIAS"
@@ -53,7 +56,7 @@ while [ $OUTER_COUNT -lt $LIMIT ]; do
           --no-suggest-shell-commands \
           --test \
           --yes \
-          --message "Identify the root cause of test failures and implement a structural fix."
+          --message "Identify the root cause of test failures and implement a structural fix. $GUARDS"
 
     # Explicit check of the test result
     if eval "$TEST_CMD" > /dev/null 2>&1; then
@@ -83,7 +86,7 @@ while [ $OUTER_COUNT -lt $LIMIT ]; do
               --no-suggest-shell-commands \
               --test \
               --yes \
-              --message "Fix remaining test failures. Focus on implementation details."
+              --message "Fix remaining test failures. Focus on implementation details. $GUARDS"
 
         # Explicit check of the test result
         if eval "$TEST_CMD" > /dev/null 2>&1; then

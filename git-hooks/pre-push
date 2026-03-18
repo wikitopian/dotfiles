@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Get the current branch name
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# Define your naming convention Regex
+# Matches standard conventional types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+# Expects: type/issue-description (e.g., feat/123-ui-fix)
+valid_branch_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\/[0-9]+-[a-z0-9-]+$"
+
+# Check for the bypass flag
+if [ "$NO_VERIFY" = "1" ]; then
+    echo "⚠️  Bypassing branch name check..."
+    exit 0
+fi
+
+# Ignore branches that don't contain a "type/" (no slash)
+# This exempts main, master, development, staging, etc.
+if [[ "$local_branch" != *"/"* ]]; then
+    exit 0
+fi
+
+# Validate the branch name for structured branches
+if [[ ! "$local_branch" =~ $valid_branch_regex ]]; then
+    echo "❌ Error: Invalid branch name '$local_branch'"
+    echo "Standard: [type]/[issue#]-[description] (e.g., feat/101-new-feature)"
+    echo "To bypass, use: NO_VERIFY=1 git push"
+    exit 1
+fi
+
+exit 0

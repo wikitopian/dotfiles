@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Check if NO_VERIFY is set to 1
+if [ "$NO_VERIFY" = "1" ]; then
+    echo "⚠️ Skipping Conventional Commit linting..."
+    exit 0
+fi
+
+# Get the current branch name
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+# If branch doesn't have a slash, it's a "non-issue" branch (like main, development)
+# We tell commitlint to ignore the reference requirement via env var
+if [[ "$branch_name" != *"/"* ]]; then
+    export COMMITLINT_IGNORE_REFERENCES=1
+fi
+
+# Run commitlint on the commit message
+if command -v commitlint >/dev/null 2>&1; then
+    commitlint --config ~/.commitlintrc.js --edit "$1"
+else
+    # Fallback to npx if commitlint is not in PATH
+    npx --no-install @commitlint/cli --config ~/.commitlintrc.js --edit "$1" 2>/dev/null || \
+    npx --yes @commitlint/cli --config ~/.commitlintrc.js --edit "$1"
+fi

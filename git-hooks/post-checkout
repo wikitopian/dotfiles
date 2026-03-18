@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# $1 = previous HEAD, $2 = new HEAD, $3 = flag (1 for branch checkout, 0 for file checkout)
+if [ "$3" -eq 0 ]; then
+    exit 0
+fi
+
+# Check for the bypass flag
+if [ "$NO_VERIFY" = "1" ]; then
+    exit 0
+fi
+
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# Ignore flat branches
+if [[ "$local_branch" != *"/"* ]]; then
+    exit 0
+fi
+
+# Regex from our pre-push hook
+valid_branch_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\/[0-9]+-[a-z0-9-]+$"
+
+if [[ ! "$local_branch" =~ $valid_branch_regex ]]; then
+    echo "❌ Error: Invalid branch name '$local_branch'"
+    echo "Standard: [type]/[issue#]-[description] (e.g., feat/101-new-feature)"
+    
+    # Switch back to the previous branch
+    prev_branch=$(git symbolic-ref -q --short @{-1})
+    if [ -n "$prev_branch" ]; then
+        echo "Returning to $prev_branch and deleting $local_branch..."
+        git checkout "$prev_branch" --quiet
+        git branch -D "$local_branch" --quiet
+    fi
+    exit 1
+fi
+
+exit 0

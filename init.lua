@@ -101,6 +101,9 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
 
+  -- Git
+  { "tpope/vim-fugitive" },
+
   -- Fuzzy Finder
   {
     "nvim-telescope/telescope.nvim",
@@ -124,14 +127,136 @@ require("lazy").setup({
     end,
   },
 
-  -- Aider Integration
+  -- Nzi Integration
   {
-    "possumtech/aider-pop.nvim",
+    "possumtech/nzi",
     lazy = false,
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
-      statusline = false,
-      sync_buffers = true,
+      python_cmd = { "/home/frith/.local/share/nvim/lazy/nzi/.venv/bin/python3" },
+      active_model = "xfast",
+      models = {
+        qwenzel = {
+          model = "ollama/qwenzel:latest",
+          api_base = "http://192.168.1.17:11434",
+        },
+        qwen = {
+          model = "openrouter/qwen/qwen3.5-flash-02-23",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        gflash = {
+          model = "openrouter/google/gemini-3.1-flash-lite-preview",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        gpro = {
+          model = "openrouter/google/gemini-3.1-pro-preview",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        xfast = {
+          model = "openrouter/x-ai/grok-4.1-fast",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        ccp = {
+          model = "openrouter/deepseek/deepseek-chat",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        minimax = {
+          model = "openrouter/minimax/minimax-m2.5",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        opus = {
+          model = "openrouter/anthropic/claude-opus-4.6",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        sonnet = {
+          model = "openrouter/anthropic/claude-sonnet-4.6",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        ibm = {
+          model = "openrouter/ibm-granite/granite-4.0-h-micro",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        dance = {
+          model = "openrouter/bytedance-seed/seed-2.0-lite",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        zai = {
+          model = "openrouter/z-ai/glm-5",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        kimi = {
+          model = "openrouter/moonshotai/kimi-k2.5",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        gpt = {
+          model = "openrouter/openai/gpt-5.4",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        gptpro = {
+          model = "openrouter/openai/gpt-5.4-pro",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        nitro = {
+          model = "openrouter/openai/gpt-oss-20b:nitro",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        search = {
+          model = "openrouter/openai/gpt-4o-search-preview",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+        research = {
+          model = "openrouter/perplexity/sonar-deep-research",
+          api_base = "https://openrouter.ai/api/v1",
+          api_key = os.getenv("OPENROUTER_API_KEY"),
+        },
+      },
+      context = {
+        ignore_filetypes = { "NvimTree", "TelescopePrompt", "TelescopeResults", "fzf", "qf" },
+        sitter_queries = {
+          lua = [[
+            (function_definition) @name
+            (assignment_statement (variable_list [ (variable (identifier) @name) (variable (dot_index_expression) @name) ]) (expression_list (function_definition parameters: (parameters) @args)))
+          ]],
+          javascript = [[
+            (function_declaration name: (identifier) @name)
+            (method_definition name: (property_identifier) @name)
+            (variable_declarator id: (identifier) @name value: (arrow_function))
+          ]],
+          typescript = [[
+            (function_declaration name: (identifier) @name)
+            (method_definition name: (property_identifier) @name)
+            (variable_declarator id: (identifier) @name value: (arrow_function))
+            (interface_declaration name: (identifier) @name)
+            (type_alias_declaration name: (type_identifier) @name)
+          ]]
+        }
+      },
+      modal = {
+        show_context = true,
+      },
+      visuals = {
+        enabled = true,
+      },
     },
+    config = function(_, opts)
+      require("nzi").setup(opts)
+    end,
   },
 
   -- Theme
@@ -157,7 +282,11 @@ require("lazy").setup({
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     opts = {
-      ensure_installed = { "lua", "vim", "vimdoc", "javascript", "typescript", "markdown", "json", "html", "css", "bash" },
+      ensure_installed = { 
+        "lua", "vim", "vimdoc", "javascript", "typescript", "tsx", "javascriptreact", 
+        "markdown", "json", "html", "css", "bash", "yaml", "dockerfile", "graphql", 
+        "sql", "scss", "toml", "regex", "gitignore", "python", "go", "rust"
+      },
       highlight = { enable = true },
     },
     config = function(_, opts)
@@ -209,7 +338,7 @@ require("lazy").setup({
       sections = {
         lualine_b = { { "filename", path = 2 } },
         lualine_x = {
-          { function() return require("aider-pop").status() end },
+          { function() return _G.nzi_statusline() end },
           "encoding", "fileformat", "filetype",
         },
       },
@@ -243,14 +372,50 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
   end,
 })
 
 -- Global Keybindings
 local map = vim.keymap.set
 
--- Aider
-map("n", "<Leader>a", "<cmd>AiderPopToggle<cr>", { desc = "Toggle Aider" })
+-- Nzi
+map("n", "<Leader>aa", "<cmd>AI/toggle<cr>", { desc = "Toggle Nzi Modal" })
+map("n", "<Leader>ax", "<cmd>AI/stop<cr>", { desc = "Abort Generation" })
+map("n", "<Leader>ay", "<cmd>AI/yank<cr>", { desc = "Yank Last Response" })
+map("n", "<Leader>ac", "<cmd>AI/clear<cr>", { desc = "Clear History" })
+map("n", "<Leader>au", "<cmd>AI/undo<cr>", { desc = "Undo Last Turn" })
+
+-- Interaction
+map("n", "<Leader>a?", ":AI? ", { desc = "Ask Question" })
+map("n", "<Leader>a:", ":AI: ", { desc = "Give Directive" })
+map("n", "<Leader>a!", ":AI! ", { desc = "Shell Command" })
+map("n", "<Leader>a/", ":AI/ ", { desc = "Internal Command" })
+
+-- Context Management
+map("n", "<Leader>aA", "<cmd>AI/active<cr>", { desc = "Set Buffer Active" })
+map("n", "<Leader>aR", "<cmd>AI/read<cr>", { desc = "Set Buffer Read-only" })
+map("n", "<Leader>aI", "<cmd>AI/ignore<cr>", { desc = "Ignore Buffer" })
+map("n", "<Leader>aS", "<cmd>AI/state<cr>", { desc = "View Buffer State" })
+map("n", "<Leader>at", "<cmd>AI/tree<cr>", { desc = "Context Tree" })
+map("n", "<Leader>aT", "<cmd>AI/Tree<cr>", { desc = "Universe Tree" })
+map("n", "<Leader>ab", "<cmd>AI/buffers<cr>", { desc = "Buffer Context Manager" })
+
+-- Navigation & Models
+map("n", "<Leader>an", "<cmd>AI/next<cr>", { desc = "Next Pending Diff" })
+map("n", "<Leader>ap", "<cmd>AI/prev<cr>", { desc = "Prev Pending Diff" })
+map("n", "<Leader>aN", "<cmd>AI/next_task<cr>", { desc = "Perform Next Task" })
+map("n", "<Leader>aD", "<cmd>AI/accept<cr>", { desc = "Accept Diff" })
+map("n", "<Leader>ad", "<cmd>AI/reject<cr>", { desc = "Reject Diff" })
+map("n", "<Leader>am", "<cmd>AI/model<cr>", { desc = "Model Menu" })
+
+-- Session & Projects
+map("n", "<Leader>aw", "<cmd>AI/save<cr>", { desc = "Save Session" })
+map("n", "<Leader>ae", "<cmd>AI/load<cr>", { desc = "Load Session" })
+map("n", "<Leader>ar", "<cmd>AI/test<cr>", { desc = "Run Tests" })
+map("n", "<Leader>af", "<cmd>AI/ralph<cr>", { desc = "Ralph Loop" })
 
 -- Navigation
 map("n", "<Leader>b", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })

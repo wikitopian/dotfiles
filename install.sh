@@ -2,13 +2,6 @@
 
 # Ensure target directories exist
 mkdir -p "$HOME/.config/nvim"
-mkdir -p "$HOME/.local/bin"
-
-# Link ralph.sh
-# Use symbolic link so changes in repo are reflected immediately
-rm -f "$HOME/.local/bin/ralph.sh"
-ln -sf "$(pwd)/ralph.sh" "$HOME/.local/bin/ralph.sh"
-chmod +x "$(pwd)/ralph.sh"
 
 # Link tmux.conf
 # Use symbolic link so changes in repo are reflected immediately

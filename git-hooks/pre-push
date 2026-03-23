@@ -1,15 +1,14 @@
 #!/bin/bash
 
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$HOOK_DIR/_branch-regex.sh" 2>/dev/null || \
+  source "$(git rev-parse --show-toplevel)/git-hooks/_branch-regex.sh" 2>/dev/null
+
 # Get the current branch name
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 
-# Define your naming convention Regex
-# Matches standard conventional types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
-# Expects: type/issue-description (e.g., feat/123-ui-fix)
-valid_branch_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\/[0-9]+-[a-z0-9-]+$"
-
 # Check for the bypass flag
-if [ "$NO_VERIFY" = "1" ]; then
+if [ "$SKIP_HOOKS" = "1" ]; then
     echo "⚠️  Bypassing branch name check..."
     exit 0
 fi
@@ -24,7 +23,7 @@ fi
 if [[ ! "$local_branch" =~ $valid_branch_regex ]]; then
     echo "❌ Error: Invalid branch name '$local_branch'"
     echo "Standard: [type]/[issue#]-[description] (e.g., feat/101-new-feature)"
-    echo "To bypass, use: NO_VERIFY=1 git push"
+    echo "To bypass, use: SKIP_HOOKS=1 git push"
     exit 1
 fi
 

@@ -49,8 +49,6 @@ end
 vim.opt.directory = dirs.swap
 vim.opt.undodir = dirs.undo
 vim.opt.backupdir = dirs.backup
-vim.opt.swapfile = false
-
 -- Disable swap files in headless/embedded instances to avoid aider-pop collisions
 if #vim.api.nvim_list_uis() == 0 then
   vim.opt.swapfile = false
@@ -98,7 +96,6 @@ vim.opt.rtp:prepend(lazypath)
 -- ========================================================================== --
 require("lazy").setup({
   -- Core Libraries
-  { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
 
   -- Git
@@ -151,8 +148,8 @@ require("lazy").setup({
     build = ":TSUpdate",
     opts = {
       ensure_installed = { 
-        "lua", "vim", "vimdoc", "javascript", "typescript", "tsx", "javascriptreact", 
-        "markdown", "json", "html", "css", "bash", "yaml", "dockerfile", "graphql", 
+        "lua", "vim", "vimdoc", "javascript", "typescript", "tsx",
+        "markdown", "json", "html", "css", "bash", "yaml", "dockerfile", "graphql",
         "sql", "scss", "toml", "regex", "gitignore", "python", "go", "rust"
       },
       highlight = { enable = true },
@@ -162,24 +159,42 @@ require("lazy").setup({
     end,
   },
 
-  -- Copilot (Ghost Suggestions)
+  -- Local FIM Completions (Ghost Suggestions via Ollama)
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
+    "milanglacier/minuet-ai.nvim",
     event = "InsertEnter",
-    opts = {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        keymap = {
-          accept = "<C-y>",
-          next = "<M-]>",
-          prev = "<M-[>",
-          dismiss = "<C-]>",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("minuet").setup({
+        provider = "openai_fim_compatible",
+        n_completions = 1,
+        context_window = 1536,
+        throttle = 500,
+        debounce = 300,
+        request_timeout = 3,
+        virtualtext = {
+          auto_trigger_ft = { "*" },
+          keymap = {
+            accept = "<C-y>",
+            next = "<C-Space>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
         },
-      },
-      panel = { enabled = false },
-    },
+        provider_options = {
+          openai_fim_compatible = {
+            api_key = "TERM",
+            name = "Ollama",
+            end_point = "http://localhost:11434/v1/completions",
+            model = "qwenfim",
+            optional = {
+              max_tokens = 56,
+              top_p = 0.9,
+            },
+          },
+        },
+      })
+    end,
   },
 
   -- Completion Engine (Blink)
@@ -189,8 +204,18 @@ require("lazy").setup({
     opts = {
       keymap = { preset = "default" },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "minuet", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          minuet = {
+            name = "minuet",
+            module = "minuet.blink",
+            async = true,
+            timeout_ms = 3000,
+            score_offset = 50,
+          },
+        },
       },
+      completion = { trigger = { prefetch_on_insert = false } },
     },
   },
 
@@ -232,12 +257,21 @@ vim.lsp.config("biome", {
 })
 vim.lsp.enable("biome")
 
+-- Format on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function() vim.lsp.buf.format({ timeout_ms = 2000 }) end,
+})
+
 -- Standard way to set up LSP keybindings in 0.11+
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local opts = { buffer = args.buf }
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
     vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)

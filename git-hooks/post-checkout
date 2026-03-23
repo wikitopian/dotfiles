@@ -6,9 +6,13 @@ if [ "$3" -eq 0 ]; then
 fi
 
 # Check for the bypass flag
-if [ "$NO_VERIFY" = "1" ]; then
+if [ "$SKIP_HOOKS" = "1" ]; then
     exit 0
 fi
+
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$HOOK_DIR/_branch-regex.sh" 2>/dev/null || \
+  source "$(git rev-parse --show-toplevel)/git-hooks/_branch-regex.sh" 2>/dev/null
 
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 
@@ -17,19 +21,16 @@ if [[ "$local_branch" != *"/"* ]]; then
     exit 0
 fi
 
-# Regex from our pre-push hook
-valid_branch_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\/[0-9]+-[a-z0-9-]+$"
-
 if [[ ! "$local_branch" =~ $valid_branch_regex ]]; then
     echo "❌ Error: Invalid branch name '$local_branch'"
     echo "Standard: [type]/[issue#]-[description] (e.g., feat/101-new-feature)"
-    
+
     # Switch back to the previous branch
     prev_branch=$(git symbolic-ref -q --short @{-1})
     if [ -n "$prev_branch" ]; then
         echo "Returning to $prev_branch and deleting $local_branch..."
-        git checkout "$prev_branch" --quiet
-        git branch -D "$local_branch" --quiet
+        git checkout "$prev_branch"
+        git branch -D "$local_branch"
     fi
     exit 1
 fi

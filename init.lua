@@ -219,22 +219,39 @@ require("lazy").setup({
     },
   },
 
+  -- AI Agent (Rummy)
+  {
+    "possumtech/rummy.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("rummy").setup({
+        persona = "MATT",
+        skills = { "project" },
+      })
+      require("rummy").apply_default_keymaps()
+    end,
+  },
+
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
-    opts = {
-      options = {
-        theme = "auto",
-        globalstatus = true,
-        section_separators = { left = "", right = "" },
+    dependencies = { "possumtech/rummy.nvim" },
+    opts = function()
+      return {
+        options = {
+          theme = "auto",
+          globalstatus = true,
+          section_separators = { left = "", right = "" },
       },
       sections = {
-        lualine_b = { { "filename", path = 2 } },
+        lualine_b = { { "filename", path = 1 } },
         lualine_x = {
+          require("rummy").statusline,
           "encoding", "fileformat", "filetype",
         },
       },
-    },
+    }
+    end,
   },
 })
 

@@ -7,7 +7,10 @@ module.exports = {
   parserPreset: {
     parserOpts: {
       // This regex tells commitlint what an issue reference looks like
-      issuePrefixes: ['#']
+      issuePrefixes: ['#'],
+      // Disable action-keyword parsing (fix, resolve, close) that swallows
+      // references when these words appear adjacent to #NNN in the subject
+      referenceActions: null
     }
   }
 };

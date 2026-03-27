@@ -315,6 +315,21 @@ map("n", "<Leader>f", function()
   end
 end, { desc = "Toggle netrw Sidebar" })
 
+-- Markdown Preview
+map("n", "<Leader>aq", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then return vim.notify("No file to preview", vim.log.levels.WARN) end
+  local out = vim.fn.expand("~/repo/preview/index.html")
+  vim.fn.system({
+    "pandoc", "--standalone", "--embed-resources",
+    "--lua-filter=" .. vim.fn.expand("~/.local/share/pandoc/filters/mermaid.lua"),
+    "--metadata", "title=" .. vim.fn.fnamemodify(file, ":t:r"),
+    "-f", "markdown", "-t", "html", file, "-o", out,
+  })
+  if vim.v.shell_error ~= 0 then return vim.notify("Pandoc failed", vim.log.levels.ERROR) end
+  vim.notify("Preview updated")
+end, { desc = "Export markdown to preview HTML" })
+
 -- UI Toggles
 map("n", "<leader><tab>", function()
   vim.opt.expandtab = not vim.opt.expandtab:get()

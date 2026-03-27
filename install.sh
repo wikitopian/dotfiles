@@ -49,6 +49,14 @@ mkdir -p "$HOME/repo"
 git config --global diff.tool vimdiff
 git config --global merge.tool vimdiff
 
+# Link pandoc mermaid filter
+mkdir -p "$HOME/.local/share/pandoc/filters"
+rm -f "$HOME/.local/share/pandoc/filters/mermaid.lua"
+ln -sf "$SCRIPT_DIR/mermaid.lua" "$HOME/.local/share/pandoc/filters/mermaid.lua"
+
+# Create preview directory
+mkdir -p "$HOME/repo/preview"
+
 git config --global core.editor "nvim"
 git config --global user.name "wikitopian"
 git config --global user.email "wikitopian@pm.me"

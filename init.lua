@@ -70,6 +70,17 @@ if not vim.treesitter.parsers then
   }
 end
 
+-- Prose mode for markdown and text files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.breakindent = true
+    require("zen-mode").open()
+  end,
+})
+
 -- Netrw Configuration (Sidebar)
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
@@ -232,6 +243,14 @@ require("lazy").setup({
     end,
   },
 
+  -- Prose Mode
+  {
+    "folke/zen-mode.nvim",
+    opts = {
+      window = { width = 80 },
+    },
+  },
+
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
@@ -329,6 +348,9 @@ map("n", "<Leader>aq", function()
   if vim.v.shell_error ~= 0 then return vim.notify("Pandoc failed", vim.log.levels.ERROR) end
   vim.notify("Preview updated")
 end, { desc = "Export markdown to preview HTML" })
+
+-- Zen Mode Toggle
+map("n", "<Leader>z", "<cmd>ZenMode<cr>", { desc = "Toggle Zen Mode" })
 
 -- UI Toggles
 map("n", "<leader><tab>", function()

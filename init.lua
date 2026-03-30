@@ -107,6 +107,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   -- Core Libraries
   { "nvim-tree/nvim-web-devicons" },
+  { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
   -- Git
   { "tpope/vim-fugitive" },

@@ -77,7 +77,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
     vim.opt_local.breakindent = true
-    require("zen-mode").open()
   end,
 })
 
@@ -195,12 +194,22 @@ require("lazy").setup({
         provider_options = {
           openai_fim_compatible = {
             api_key = "TERM",
-            name = "Ollama",
-            end_point = "http://localhost:11434/v1/completions",
+            name = "llama.cpp",
+            end_point = "http://127.0.0.1:11436/v1/completions",
             model = "qwenfim",
             optional = {
-              max_tokens = 56,
-              top_p = 0.9,
+              max_tokens = 128,
+              top_p = 0.95,
+              temperature = 0,
+              repeat_penalty = 1.1,
+              stop = {
+                "<|fim_pad|>",
+                "<|endoftext|>",
+                "<|fim_prefix|>",
+                "<|fim_suffix|>",
+                "<|fim_middle|>",
+                "\n\n\n",
+              },
             },
           },
         },
@@ -241,14 +250,6 @@ require("lazy").setup({
       })
       require("rummy").apply_default_keymaps()
     end,
-  },
-
-  -- Prose Mode
-  {
-    "folke/zen-mode.nvim",
-    opts = {
-      window = { width = 80 },
-    },
   },
 
   -- Statusline
@@ -348,9 +349,6 @@ map("n", "<Leader>aq", function()
   if vim.v.shell_error ~= 0 then return vim.notify("Pandoc failed", vim.log.levels.ERROR) end
   vim.notify("Preview updated")
 end, { desc = "Export markdown to preview HTML" })
-
--- Zen Mode Toggle
-map("n", "<Leader>z", "<cmd>ZenMode<cr>", { desc = "Toggle Zen Mode" })
 
 -- UI Toggles
 map("n", "<leader><tab>", function()

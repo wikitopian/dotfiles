@@ -2,4 +2,3 @@ a lean, defaults-oriented configuration for a commandline jumpbox development en
 ========
 
 a lean, defaults-oriented configuration for a commandline jumpbox development environment
-

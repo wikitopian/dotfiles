@@ -178,8 +178,8 @@ require("lazy").setup({
     config = function()
       require("minuet").setup({
         provider = "openai_fim_compatible",
-        n_completions = 1,
-        context_window = 1536,
+        n_completions = 4,
+        context_window = 2048,
         throttle = 500,
         debounce = 300,
         request_timeout = 3,
@@ -198,10 +198,16 @@ require("lazy").setup({
             name = "llama.cpp",
             end_point = "http://127.0.0.1:11436/v1/completions",
             model = "qwenfim",
+            transform = {
+              function(data)
+                data.body.suffix = nil
+                return data
+              end,
+            },
             optional = {
               max_tokens = 128,
               top_p = 0.95,
-              temperature = 0,
+              temperature = 0.4,
               repeat_penalty = 1.1,
               stop = {
                 "<|fim_pad|>",
@@ -209,7 +215,7 @@ require("lazy").setup({
                 "<|fim_prefix|>",
                 "<|fim_suffix|>",
                 "<|fim_middle|>",
-                "\n\n\n",
+                "\n",
               },
             },
           },
@@ -236,7 +242,19 @@ require("lazy").setup({
           },
         },
       },
-      completion = { trigger = { prefetch_on_insert = false } },
+      completion = {
+        menu = {
+          min_width = 40,
+          max_height = 25,
+          draw = {
+            columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
+            components = {
+              label = { width = { fill = true, max = 100 } },
+            },
+          },
+        },
+        trigger = { prefetch_on_insert = false },
+      },
     },
   },
 

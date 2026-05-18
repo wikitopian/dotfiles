@@ -109,6 +109,30 @@ require("lazy").setup({
   { "nvim-tree/nvim-web-devicons" },
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
 
+  -- Buffer Tabs
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      options = {
+        mode = "tabs",
+        separator_style = "thin",
+        show_close_icon = false,
+        show_buffer_close_icons = false,
+        diagnostics = "nvim_lsp",
+        offsets = {
+          {
+            filetype = "netrw",
+            text = "Files",
+            highlight = "Directory",
+            separator = true,
+          },
+        },
+      },
+    },
+  },
+
   -- Git
   { "tpope/vim-fugitive" },
 
@@ -170,60 +194,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Local FIM Completions (Ghost Suggestions via Ollama)
-  {
-    "milanglacier/minuet-ai.nvim",
-    event = "InsertEnter",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("minuet").setup({
-        provider = "openai_fim_compatible",
-        n_completions = 4,
-        context_window = 2048,
-        throttle = 500,
-        debounce = 300,
-        request_timeout = 3,
-        virtualtext = {
-          auto_trigger_ft = { "*" },
-          keymap = {
-            accept = "<C-y>",
-            next = "<C-Space>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
-          },
-        },
-        provider_options = {
-          openai_fim_compatible = {
-            api_key = "TERM",
-            name = "llama.cpp",
-            end_point = "http://127.0.0.1:11436/v1/completions",
-            model = "qwenfim",
-            transform = {
-              function(data)
-                data.body.suffix = nil
-                return data
-              end,
-            },
-            optional = {
-              max_tokens = 128,
-              top_p = 0.95,
-              temperature = 0.4,
-              repeat_penalty = 1.1,
-              stop = {
-                "<|fim_pad|>",
-                "<|endoftext|>",
-                "<|fim_prefix|>",
-                "<|fim_suffix|>",
-                "<|fim_middle|>",
-                "\n",
-              },
-            },
-          },
-        },
-      })
-    end,
-  },
-
   -- Completion Engine (Blink)
   {
     "saghen/blink.cmp",
@@ -231,16 +201,7 @@ require("lazy").setup({
     opts = {
       keymap = { preset = "default" },
       sources = {
-        default = { "minuet", "lsp", "path", "snippets", "buffer" },
-        providers = {
-          minuet = {
-            name = "minuet",
-            module = "minuet.blink",
-            async = true,
-            timeout_ms = 3000,
-            score_offset = 50,
-          },
-        },
+        default = { "lsp", "path", "snippets", "buffer" },
       },
       completion = {
         menu = {
@@ -258,23 +219,9 @@ require("lazy").setup({
     },
   },
 
-  -- AI Agent (Rummy)
-  {
-    "possumtech/rummy.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("rummy").setup({
-        persona = "MATT",
-        skills = { "project" },
-      })
-      require("rummy").apply_default_keymaps()
-    end,
-  },
-
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "possumtech/rummy.nvim" },
     opts = function()
       return {
         options = {
@@ -284,10 +231,7 @@ require("lazy").setup({
       },
       sections = {
         lualine_b = { { "filename", path = 1 } },
-        lualine_x = {
-          require("rummy").statusline,
-          "encoding", "fileformat", "filetype",
-        },
+        lualine_x = { "encoding", "fileformat", "filetype" },
       },
     }
     end,
@@ -341,8 +285,10 @@ local map = vim.keymap.set
 -- Navigation
 map("n", "<Leader>b", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })
 map("n", "<Leader>s", "<cmd>Telescope live_grep<cr>", { desc = "Search Project" })
-map("n", "<Left>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("n", "<Right>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+map("n", "<Left>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+map("n", "<Right>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+map("n", "<S-Left>", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+map("n", "<S-Right>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 
 -- Netrw Sidebar
 map("n", "<Leader>f", function()

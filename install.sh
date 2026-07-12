@@ -5,6 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Ensure target directories exist
 mkdir -p "$HOME/.config/nvim"
 
+# Link PLURNK.md
+mkdir -p "$HOME/.plurnk"
+rm -f "$HOME/.plurnk/AGENTS.md"
+ln -sf "$SCRIPT_DIR/PLURNK.md" "$HOME/.plurnk/AGENTS.md"
+
 # Link tmux.conf
 rm -f "$HOME/.tmux.conf"
 ln -sf "$SCRIPT_DIR/tmux.conf" "$HOME/.tmux.conf"
@@ -48,6 +53,13 @@ mkdir -p "$HOME/repo"
 
 git config --global diff.tool vimdiff
 git config --global merge.tool vimdiff
+
+# Link claude session status hook + tmux counter
+mkdir -p "$HOME/.claude/hooks" "$HOME/.local/bin" "$HOME/.cache/claude-status"
+rm -f "$HOME/.claude/hooks/claude-status-hook.mjs"
+ln -sf "$SCRIPT_DIR/claude-status-hook.mjs" "$HOME/.claude/hooks/claude-status-hook.mjs"
+rm -f "$HOME/.local/bin/claude-tmux-count"
+ln -sf "$SCRIPT_DIR/claude-tmux-count" "$HOME/.local/bin/claude-tmux-count"
 
 # Link pandoc mermaid filter
 mkdir -p "$HOME/.local/share/pandoc/filters"

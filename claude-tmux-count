@@ -1,0 +1,36 @@
+#!/bin/sh
+# tmux status: claude sessions busy/total (+ attention count when > 0).
+# Primary source: hook state files (~/.cache/claude-status, written by
+# claude-status-hook.js). Fallback for pre-hook sessions: transcript mtime.
+dir="$HOME/.cache/claude-status"
+mkdir -p "$dir"
+total=$(pgrep -cx claude 2>/dev/null)
+
+# prune state files older than a day (crashed sessions never SessionEnd)
+find "$dir" -type f -mmin +1440 -delete 2>/dev/null
+
+busy=0 attn=0
+for f in "$dir"/*; do
+    [ -f "$f" ] || continue
+    case "$(cat "$f")" in
+        busy) busy=$((busy + 1)) ;;
+        attention) attn=$((attn + 1)) ;;
+    esac
+done
+
+# sessions started before hooks existed: recent transcript write, no state file
+for t in $(find "$HOME/.claude/projects" -maxdepth 2 -name '*.jsonl' -mmin -0.35 2>/dev/null); do
+    sid=$(basename "$t" .jsonl)
+    [ -f "$dir/$sid" ] || busy=$((busy + 1))
+done
+
+[ "$busy" -gt "$total" ] && busy=$total
+
+if [ "$attn" -gt 0 ]; then
+    printf '#[fg=colour196,bold]⚠ %s #[fg=colour250,nobold]' "$attn"
+fi
+if [ "$busy" -gt 0 ]; then
+    printf '#[fg=colour118,bold]⚙ %s/%s#[fg=colour250,nobold]' "$busy" "$total"
+else
+    printf '⚙ %s/%s' "$busy" "$total"
+fi

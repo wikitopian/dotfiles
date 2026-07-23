@@ -7,7 +7,7 @@ if [ "$SKIP_HOOKS" = "1" ]; then
 fi
 
 # Get the current branch name
-branch_name=$(git rev-parse --abbrev-ref HEAD)
+branch_name=$(git symbolic-ref --quiet --short HEAD)
 
 # If branch doesn't have a slash, it's a "non-issue" branch (like main, development)
 # We tell commitlint to ignore the reference requirement via env var

@@ -219,6 +219,16 @@ require("lazy").setup({
     },
   },
 
+  -- AI Client
+  {
+    "plurnk/plurnk.nvim",
+    opts = {},
+    config = function(_, opts)
+      require("plurnk").setup(opts)
+      require("plurnk").apply_default_keymaps()
+    end,
+  },
+
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
@@ -231,7 +241,10 @@ require("lazy").setup({
       },
       sections = {
         lualine_b = { { "filename", path = 1 } },
-        lualine_x = { "encoding", "fileformat", "filetype" },
+        lualine_x = {
+          function() return require("plurnk").statusline() end,
+          "encoding", "fileformat", "filetype",
+        },
       },
     }
     end,

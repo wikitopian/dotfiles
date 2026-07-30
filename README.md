@@ -1,4 +1,7 @@
-a lean, defaults-oriented configuration for a commandline jumpbox development environment
-========
+# Dotfiles
 
-a lean, defaults-oriented configuration for a commandline jumpbox development environment
+A lean, defaults-oriented configuration for a command-line jumpbox development
+environment.
+
+The GitHub repository is a downstream public distribution. Canonical
+development occurs in the authenticated project workspace.

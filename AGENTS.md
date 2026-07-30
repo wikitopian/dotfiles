@@ -1,5 +1,9 @@
 # Dotfiles
 
+Read `../POSSUMTECH.md` completely before applying this repository-specific
+guidance. If that contract is unavailable, stop and report the missing
+workspace dependency.
+
 ## Project Mission Statement
 
 Maintain a lean but powerful unix jumpbox environment
@@ -18,4 +22,3 @@ Maintain a lean but powerful unix jumpbox environment
 * Use pandoc (in system) to convert document markdown+mermaid to index.html
 
 ## Project Assistant Notes
-

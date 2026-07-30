@@ -1,25 +1,35 @@
-#!/bin/bash
+#!/bin/sh
+set -eu
 
 # Check if SKIP_HOOKS is set to 1
-if [ "$SKIP_HOOKS" = "1" ]; then
+if [ "${SKIP_HOOKS:-0}" = "1" ]; then
     echo "⚠️ Skipping Conventional Commit linting..."
     exit 0
 fi
 
 # Get the current branch name
-branch_name=$(git symbolic-ref --quiet --short HEAD)
+branch_name=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)
 
 # If branch doesn't have a slash, it's a "non-issue" branch (like main, development)
 # We tell commitlint to ignore the reference requirement via env var
-if [[ "$branch_name" != *"/"* ]]; then
-    export COMMITLINT_IGNORE_REFERENCES=1
+case "$branch_name" in
+    */*)
+        ;;
+    *)
+        export COMMITLINT_IGNORE_REFERENCES=1
+        ;;
+esac
+
+# Run the installed CLI from npm's authoritative global prefix.
+if ! command -v npm >/dev/null 2>&1; then
+    printf "%s\n" "npm is required; run the Dotfiles installer." >&2
+    exit 127
 fi
 
-# Run commitlint on the commit message
-if command -v commitlint >/dev/null 2>&1; then
-    commitlint --config ~/.commitlintrc.js --edit "$1"
-else
-    # Fallback to npx if commitlint is not in PATH
-    npx --no-install @commitlint/cli --config ~/.commitlintrc.js --edit "$1" 2>/dev/null || \
-    npx --yes @commitlint/cli --config ~/.commitlintrc.js --edit "$1"
+commitlint_path="$(npm prefix --global)/bin/commitlint"
+if [ ! -x "$commitlint_path" ]; then
+    printf "%s\n" "commitlint is unavailable; run the Dotfiles installer." >&2
+    exit 127
 fi
+
+"$commitlint_path" --config ~/.commitlintrc.js --edit "$1"

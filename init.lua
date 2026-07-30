@@ -61,15 +61,6 @@ vim.opt.wildmode = "longest:full,full"
 vim.opt.wildignorecase = true
 vim.opt.wildignore:append({ "*/node_modules/*", "*/.git/*", "*/vendor/*" })
 
--- Shim for Neovim 0.11 Treesitter changes (Telescope Compatibility)
-if not vim.treesitter.parsers then
-  vim.treesitter.parsers = {
-    ft_to_lang = function(ft)
-      return (vim.treesitter.language and vim.treesitter.language.get_lang(ft)) or ft
-    end,
-  }
-end
-
 -- Prose mode for markdown and text files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "text" },
@@ -104,6 +95,25 @@ vim.opt.rtp:prepend(lazypath)
 -- ========================================================================== --
 -- 3. PLUGIN SPECIFICATIONS
 -- ========================================================================== --
+local lsp_servers = {
+  { name = "vtsls", version = "0.3.0" },
+  { name = "eslint", version = "4.10.0" },
+  { name = "biome", version = "2.4.8" },
+}
+local lsp_server_names = {}
+local mason_lsp_servers = {}
+
+for _, server in ipairs(lsp_servers) do
+  lsp_server_names[#lsp_server_names + 1] = server.name
+  mason_lsp_servers[#mason_lsp_servers + 1] = server.name .. "@" .. server.version
+end
+
+local treesitter_languages = {
+  "lua", "vim", "vimdoc", "javascript", "typescript", "tsx",
+  "markdown", "json", "html", "css", "bash", "yaml", "dockerfile", "graphql",
+  "sql", "scss", "toml", "regex", "gitignore", "python", "go", "rust",
+}
+
 require("lazy").setup({
   -- Core Libraries
   { "nvim-tree/nvim-web-devicons" },
@@ -175,22 +185,37 @@ require("lazy").setup({
   { "williamboman/mason.nvim", opts = {} },
   {
     "williamboman/mason-lspconfig.nvim",
-    opts = { ensure_installed = { "vtsls", "eslint", "biome" } },
+    opts = {
+      ensure_installed = mason_lsp_servers,
+      automatic_enable = false,
+    },
   },
   { "neovim/nvim-lspconfig" },
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
-    opts = {
-      ensure_installed = { 
-        "lua", "vim", "vimdoc", "javascript", "typescript", "tsx",
-        "markdown", "json", "html", "css", "bash", "yaml", "dockerfile", "graphql",
-        "sql", "scss", "toml", "regex", "gitignore", "python", "go", "rust"
-      },
-      highlight = { enable = true },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.config").setup(opts)
+    config = function()
+      local treesitter = require("nvim-treesitter")
+      local configured_languages = {}
+
+      for _, language in ipairs(treesitter_languages) do
+        configured_languages[language] = true
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          local filetype = vim.bo[args.buf].filetype
+          local language = vim.treesitter.language.get_lang(filetype)
+          if language and configured_languages[language] then
+            vim.treesitter.start(args.buf, language)
+          end
+        end,
+      })
+
+      vim.api.nvim_create_user_command("DotfilesSyncTreesitter", function()
+        treesitter.install(treesitter_languages):wait(300000)
+      end, { desc = "Install the configured Tree-sitter parsers" })
     end,
   },
 
@@ -256,26 +281,35 @@ require("lazy").setup({
 -- ========================================================================== --
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
--- Native Neovim 0.11 LSP API
--- Note: nvim-lspconfig provides the configurations automatically
-vim.lsp.config("vtsls", { capabilities = capabilities })
-vim.lsp.enable("vtsls")
-
-vim.lsp.config("eslint", { capabilities = capabilities })
-vim.lsp.enable("eslint")
-
-vim.lsp.config("biome", {
-  capabilities = capabilities,
-  root_dir = vim.fs.root(0, { "biome.json", "biome.jsonc" }),
-})
-vim.lsp.enable("biome")
+vim.lsp.config("*", { capabilities = capabilities })
+vim.lsp.enable(lsp_server_names)
 
 -- Format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  callback = function() vim.lsp.buf.format({ timeout_ms = 2000 }) end,
+  callback = function(args)
+    local clients = vim.lsp.get_clients({ bufnr = args.buf, method = "textDocument/formatting" })
+    local formatter
+
+    for _, client in ipairs(clients) do
+      if client.name == "biome" then
+        formatter = "biome"
+        break
+      elseif client.name == "vtsls" then
+        formatter = "vtsls"
+      end
+    end
+
+    if formatter then
+      vim.lsp.buf.format({
+        bufnr = args.buf,
+        filter = function(client) return client.name == formatter end,
+        timeout_ms = 2000,
+      })
+    end
+  end,
 })
 
--- Standard way to set up LSP keybindings in 0.11+
+-- Buffer-local LSP keybindings
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local opts = { buffer = args.buf }
@@ -287,8 +321,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
     vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
   end,
 })
 

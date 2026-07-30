@@ -10,7 +10,7 @@ Maintain a lean but powerful unix jumpbox environment
 
 ## Project TODO List
 
-- [ ] Add markdown html document generator to neovim
+- [x] Add markdown html document generator to neovim
 
 ## Project Knowns
 

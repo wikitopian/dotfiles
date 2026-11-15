@@ -149,9 +149,20 @@ test("resolves the installed commitlint CLI through npm's global prefix", async 
       "commit",
       "--allow-empty",
       "-m",
-      "chore: initialize hook test",
+      "chore: Initialize Hook Test With Capitalized Subject",
     ]);
     assert.equal(valid.status, 0, valid.stderr);
+
+    const tooLong = runGit(directory, [
+      "-c",
+      "commit.gpgsign=false",
+      "commit",
+      "--allow-empty",
+      "-m",
+      `chore: ${"a".repeat(95)}`,
+    ]);
+    assert.equal(tooLong.status, 1);
+    assert.match(`${tooLong.stdout}\n${tooLong.stderr}`, /header-max-length/);
 
     const invalid = runGit(directory, [
       "-c",

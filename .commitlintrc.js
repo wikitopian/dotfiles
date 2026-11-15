@@ -3,6 +3,9 @@ module.exports = {
   rules: {
     // 2 means "error", "never" means it must NOT be empty
     'references-empty': [process.env.COMMITLINT_IGNORE_REFERENCES === '1' ? 0 : 2, 'never'],
+    // Capitalisation in a subject is not a defect; the limit is the only header rule.
+    'subject-case': [0],
+    'header-max-length': [2, 'always', 100],
   },
   parserPreset: {
     parserOpts: {

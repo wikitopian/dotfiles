@@ -24,7 +24,9 @@ service infrastructure remain outside this repository.
 Neovim startup must be silent in headless mode. LSP configuration uses the
 native current-stable API. Each buffer has at most one automatic formatter:
 Biome when attached, otherwise vtsls. ESLint remains a diagnostics and
-explicit-fix provider.
+explicit-fix provider. Native LSP completion is explicitly invoked. Automatic
+predictive completion is one DeepSeek FIM request at a time, rendered as ghost
+text and inserted only on explicit acceptance.
 
 ## Installation
 
@@ -36,6 +38,6 @@ toolchain must not silently select floating versions.
 ## Acceptance
 
 `check.sh` verifies the tracked Neovim and Tree-sitter versions, real configured
-Neovim startup, Telescope loading, Git hook behavior, and tmux configuration
-parsing. A zero process status does not by itself establish clean Neovim
-startup; emitted startup errors are failures.
+Neovim startup, Telescope and Minuet loading, Git hook behavior, and tmux
+configuration parsing. A zero process status does not by itself establish clean
+Neovim startup; emitted startup errors are failures.

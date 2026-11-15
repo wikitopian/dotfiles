@@ -49,6 +49,7 @@ run_nvim_check "Neovim startup" \
   "+lua assert(vim.fn.has('nvim-0.12') == 1, 'Neovim 0.12+ is required')" \
   "+lua assert(vim.lsp.config and vim.lsp.enable, 'Native LSP configuration is unavailable')" \
   "+lua assert(require('telescope'), 'Telescope failed to load')" \
+  "+lua assert(require('minuet'), 'Minuet failed to load')" \
   +qa
 
 run_nvim_check "Tree-sitter attachment" \

@@ -20,6 +20,7 @@ vim.opt.listchars = {
 }
 vim.opt.colorcolumn = "81,101,121"
 vim.opt.confirm = true
+vim.opt.completeopt = { "menuone", "noselect", "popup" }
 
 -- Enable autoread
 vim.opt.autoread = true
@@ -222,29 +223,46 @@ require("lazy").setup({
     end,
   },
 
-  -- Completion Engine (Blink)
+  -- Predictive Completion
   {
-    "saghen/blink.cmp",
-    version = "*",
+    "milanglacier/minuet-ai.nvim",
     opts = {
-      keymap = { preset = "default" },
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+      provider = "openai_fim_compatible",
+      n_completions = 1,
+      context_window = 16000,
+      context_ratio = 0.75,
+      throttle = 1000,
+      debounce = 400,
+      request_timeout = 3,
+      virtualtext = {
+        auto_trigger_ft = { "*" },
       },
-      completion = {
-        menu = {
-          min_width = 40,
-          max_height = 25,
-          draw = {
-            columns = { { "kind_icon" }, { "label", "label_description", gap = 1 } },
-            components = {
-              label = { width = { fill = true, max = 100 } },
-            },
+      provider_options = {
+        openai_fim_compatible = {
+          model = "deepseek-v4-flash",
+          end_point = "https://api.deepseek.com/beta/completions",
+          api_key = "DEEPSEEK_API_KEY",
+          stream = true,
+          optional = {
+            max_tokens = 256,
+            top_p = 0.9,
           },
         },
-        trigger = { prefetch_on_insert = false },
       },
     },
+    config = function(_, opts)
+      require("minuet").setup(opts)
+      local action = require("minuet.virtualtext").action
+
+      vim.keymap.set("i", "<C-y>", function()
+        if action.is_visible() then
+          action.accept_line()
+          return ""
+        end
+
+        return "<C-y>"
+      end, { desc = "Accept Completion Line", expr = true, silent = true })
+    end,
   },
 
   -- AI Client
@@ -282,9 +300,6 @@ require("lazy").setup({
 -- ========================================================================== --
 -- 4. LSP & KEYBINDINGS (MODERN 0.11+)
 -- ========================================================================== --
-local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-vim.lsp.config("*", { capabilities = capabilities })
 vim.lsp.enable(lsp_server_names)
 
 -- Format on save
@@ -315,7 +330,13 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- Buffer-local LSP keybindings
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
     local opts = { buffer = args.buf }
+
+    if client and client:supports_method("textDocument/completion") then
+      vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = false })
+    end
+
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
@@ -329,6 +350,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- Global Keybindings
 local map = vim.keymap.set
+
+map("i", "<C-Space>", vim.lsp.completion.get, { desc = "LSP Completion" })
 
 -- Navigation
 map("n", "<Leader>b", "<cmd>Telescope buffers<cr>", { desc = "Toggle Buffer List" })

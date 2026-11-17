@@ -101,13 +101,20 @@ vim.g.netrw_liststyle = 3
 vim.g.netrw_winsize = 25
 
 -- ========================================================================== --
--- 2. PLUGINS (BUILT-IN NVIM 0.12 vim.pack — 3 PLUGINS TOTAL)
+-- 2. PLUGINS (BUILT-IN NVIM 0.12 vim.pack — 4 PLUGINS TOTAL)
 -- ========================================================================== --
 vim.pack.add({
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/nvim-mini/mini.pick",
   "https://github.com/milanglacier/minuet-ai.nvim",
+  "https://github.com/folke/which-key.nvim",
 }, { confirm = false, load = true })
+
+require("which-key").setup({
+  icons = {
+    mappings = false,
+  },
+})
 
 -- Tree-sitter
 local treesitter_languages = {

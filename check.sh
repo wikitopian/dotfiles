@@ -55,7 +55,8 @@ run_nvim_check "Neovim startup" \
   "+lua assert(vim.pack and vim.lsp.config and vim.lsp.enable, 'Native 0.12 pack/LSP APIs unavailable')" \
   "+lua assert(require('mini.pick'), 'mini.pick failed to load')" \
   "+lua assert(require('minuet'), 'Minuet failed to load')" \
-  "+lua assert(#vim.pack.get() == 3, 'Expected exactly 3 managed plugins')" \
+  "+lua assert(require('which-key'), 'which-key failed to load')" \
+  "+lua assert(#vim.pack.get() == 4, 'Expected exactly 4 managed plugins')" \
   +qa
 
 run_nvim_check "Tree-sitter attachment" \

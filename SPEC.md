@@ -15,9 +15,9 @@ service infrastructure remain outside this repository.
 - `tree-sitter.version` is the exact CLI version required by the locked
   Tree-sitter plugin, authenticated by `tree-sitter.sha256`.
 - Built-in `vim.pack` owns plugin installation and locking via
-  `nvim-pack-lock.json` (`nvim-treesitter`, `mini.pick`, and `minuet-ai.nvim` —
-  three plugins total, with no third-party plugin manager, LSP wrapper plugin,
-  statusline/tabline plugin, or external colorscheme).
+  `nvim-pack-lock.json` (`nvim-treesitter`, `mini.pick`, `minuet-ai.nvim`, and
+  `which-key.nvim` — four plugins total, with no third-party plugin manager, LSP
+  wrapper plugin, statusline/tabline plugin, or external colorscheme).
 - `lsp/package.json` and `lsp/package-lock.json` lock the exact npm language
   server versions (`vtsls`, `biome`, and `vscode-langservers-extracted`),
   converged deterministically into `~/.local/share/nvim/lsp` by `install.sh`
@@ -48,7 +48,7 @@ toolchain must not silently select floating versions.
 
 `check.sh` verifies the tracked Neovim and Tree-sitter versions, absence of a
 competing `/usr/bin/nvim`, real configured Neovim startup (`vim.pack`,
-`mini.pick`, and `minuet`), Tree-sitter attachment, native `vtsls` attachment,
-Git hook behavior, and tmux configuration parsing. A zero process status does
-not by itself establish clean Neovim startup; emitted startup errors are
-failures.
+`mini.pick`, `minuet`, and `which-key`), Tree-sitter attachment, native `vtsls`
+attachment, Git hook behavior, and tmux configuration parsing. A zero process
+status does not by itself establish clean Neovim startup; emitted startup errors
+are failures.

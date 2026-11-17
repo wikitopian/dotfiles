@@ -48,23 +48,26 @@ fi
 mkdir -p "$HOME/.git/templates/hooks"
 git config --global init.templatedir "$HOME/.git/templates"
 
-# Link hooks from repo to templates
 for hook in "$SCRIPT_DIR"/git-hooks/*; do
   hook_name=$(basename "$hook")
-  # Skip shared helper files
   [[ "$hook_name" == _* ]] && continue
   link_file "$SCRIPT_DIR/git-hooks/$hook_name" "$HOME/.git/templates/hooks/$hook_name"
 
-  # Also link into the current repo if we are in one
   if [ -d "$SCRIPT_DIR/.git/hooks" ]; then
     link_file "$SCRIPT_DIR/git-hooks/$hook_name" "$SCRIPT_DIR/.git/hooks/$hook_name"
   fi
 done
 
-# Install the tracked Neovim runtime contract.
+# Remove retired lazy-lock.json symlink if owned by this repository.
+if [[ -L "$HOME/.config/nvim/lazy-lock.json" ]] &&
+   [[ "$(readlink "$HOME/.config/nvim/lazy-lock.json")" == "$SCRIPT_DIR/lazy-lock.json" ]]; then
+  rm -f "$HOME/.config/nvim/lazy-lock.json"
+fi
+
+# Install the tracked Neovim runtime and built-in vim.pack contract.
 link_file "$SCRIPT_DIR/bob.json" "$HOME/.config/bob/config.json"
 link_file "$SCRIPT_DIR/nvim.version" "$HOME/.config/nvim/nvim.version"
-link_file "$SCRIPT_DIR/lazy-lock.json" "$HOME/.config/nvim/lazy-lock.json"
+link_file "$SCRIPT_DIR/nvim-pack-lock.json" "$HOME/.config/nvim/nvim-pack-lock.json"
 link_file "$SCRIPT_DIR/init.lua" "$HOME/.config/nvim/init.lua"
 
 if ! command -v bob >/dev/null 2>&1; then
@@ -75,6 +78,21 @@ fi
 BOB_CONFIG="$HOME/.config/bob/config.json" bob sync
 link_file "$HOME/.local/share/bob/nvim-bin/nvim" "$HOME/.local/bin/nvim"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Install locked LSP servers deterministically without Mason.
+lsp_prefix="$HOME/.local/share/nvim/lsp"
+mkdir -p "$lsp_prefix"
+expected_lsp_hash=$(sha256sum "$SCRIPT_DIR/lsp/package-lock.json" | awk '{ print $1 }')
+actual_lsp_hash=""
+if [[ -f "$lsp_prefix/.lock-sha256" ]]; then
+  actual_lsp_hash=$(tr -d "[:space:]" < "$lsp_prefix/.lock-sha256")
+fi
+if [[ "$actual_lsp_hash" != "$expected_lsp_hash" ]] ||
+   [[ ! -x "$lsp_prefix/node_modules/.bin/vtsls" ]]; then
+  cp "$SCRIPT_DIR/lsp/package.json" "$SCRIPT_DIR/lsp/package-lock.json" "$lsp_prefix/"
+  npm ci --prefix "$lsp_prefix" --omit=dev --ignore-scripts --no-audit --no-fund
+  printf "%s\n" "$expected_lsp_hash" > "$lsp_prefix/.lock-sha256"
+fi
 
 tree_sitter_version=$(tr -d "[:space:]" < "$SCRIPT_DIR/tree-sitter.version")
 installed_tree_sitter_version=""
@@ -111,21 +129,18 @@ if [[ "$installed_tree_sitter_version" != "$tree_sitter_version" ]]; then
 fi
 
 mkdir -p "$HOME/.cache/nvim/swap"
-
-mkdir -p "$HOME/repo"
+mkdir -p "$HOME/repo/preview"
 
 git config --global diff.tool vimdiff
 git config --global merge.tool vimdiff
-
-# Link pandoc mermaid filter
-mkdir -p "$HOME/.local/share/pandoc/filters"
-link_file "$SCRIPT_DIR/mermaid.lua" "$HOME/.local/share/pandoc/filters/mermaid.lua"
-
-# Create preview directory
-mkdir -p "$HOME/repo/preview"
-
 git config --global core.editor "nvim"
 git config --global user.name "wikitopian"
 git config --global user.email "wikitopian@pm.me"
 
-nvim --headless "+DotfilesSyncTreesitter" +qa
+mkdir -p "$HOME/.local/share/pandoc/filters"
+link_file "$SCRIPT_DIR/mermaid.lua" "$HOME/.local/share/pandoc/filters/mermaid.lua"
+
+nvim --headless \
+  "+lua vim.pack.update(nil, { force = true, target = 'lockfile' })" \
+  "+DotfilesSyncTreesitter" \
+  +qa

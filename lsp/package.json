@@ -1,0 +1,9 @@
+{
+  "name": "dotfiles-nvim-lsp",
+  "private": true,
+  "dependencies": {
+    "@biomejs/biome": "2.4.8",
+    "@vtsls/language-server": "0.3.0",
+    "vscode-langservers-extracted": "4.10.0"
+  }
+}

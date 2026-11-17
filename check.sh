@@ -17,6 +17,11 @@ if [[ "$actual_nvim_version" != "$expected_nvim_version" ]]; then
   exit 1
 fi
 
+if [[ -e /usr/bin/nvim ]]; then
+  printf "Unexpected system /usr/bin/nvim shadows or competes with Bob runtime.\n" >&2
+  exit 1
+fi
+
 if ! command -v tree-sitter >/dev/null 2>&1; then
   printf "%s\n" "tree-sitter-cli is not available." >&2
   exit 127
@@ -47,9 +52,10 @@ run_nvim_check() {
 
 run_nvim_check "Neovim startup" \
   "+lua assert(vim.fn.has('nvim-0.12') == 1, 'Neovim 0.12+ is required')" \
-  "+lua assert(vim.lsp.config and vim.lsp.enable, 'Native LSP configuration is unavailable')" \
-  "+lua assert(require('telescope'), 'Telescope failed to load')" \
+  "+lua assert(vim.pack and vim.lsp.config and vim.lsp.enable, 'Native 0.12 pack/LSP APIs unavailable')" \
+  "+lua assert(require('mini.pick'), 'mini.pick failed to load')" \
   "+lua assert(require('minuet'), 'Minuet failed to load')" \
+  "+lua assert(#vim.pack.get() == 3, 'Expected exactly 3 managed plugins')" \
   +qa
 
 run_nvim_check "Tree-sitter attachment" \

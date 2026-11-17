@@ -1,0 +1,16 @@
+{
+  "plugins": {
+    "mini.pick": {
+      "rev": "406d41308e58486ea5c3352f5821c4cd9992af65",
+      "src": "https://github.com/nvim-mini/mini.pick"
+    },
+    "minuet-ai.nvim": {
+      "rev": "50bf63b031c0391e926fdf0b3d044d37846e6e34",
+      "src": "https://github.com/milanglacier/minuet-ai.nvim"
+    },
+    "nvim-treesitter": {
+      "rev": "b706d642dd20d0922e7e92365dc73617f0fdb4ea",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    }
+  }
+}

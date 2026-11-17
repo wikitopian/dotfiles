@@ -9,24 +9,33 @@ service infrastructure remain outside this repository.
 
 ## Neovim
 
-- Bob owns Neovim installation and version selection.
+- Bob owns Neovim installation and version selection; no competing OS
+  `/usr/bin/nvim` package may remain installed.
 - `nvim.version` is the exact accepted upstream stable release.
 - `tree-sitter.version` is the exact CLI version required by the locked
-  Tree-sitter plugin.
-- `tree-sitter.sha256` authenticates the official Linux x86_64 CLI artifact.
-- `lazy-lock.json` is the accepted plugin graph.
-- Mason's configured language-server versions are exact and share one
-  representation with the enabled LSP configurations.
+  Tree-sitter plugin, authenticated by `tree-sitter.sha256`.
+- Built-in `vim.pack` owns plugin installation and locking via
+  `nvim-pack-lock.json` (`nvim-treesitter`, `mini.pick`, and `minuet-ai.nvim` —
+  three plugins total, with no third-party plugin manager, LSP wrapper plugin,
+  statusline/tabline plugin, or external colorscheme).
+- `lsp/package.json` and `lsp/package-lock.json` lock the exact npm language
+  server versions (`vtsls`, `biome`, and `vscode-langservers-extracted`),
+  converged deterministically into `~/.local/share/nvim/lsp` by `install.sh`
+  without Mason.
 - `update-neovim.sh` is the sole procedure for advancing the selected stable
   Neovim release.
-- `install.sh` converges the installed runtime to the tracked versions.
+- `install.sh` converges the installed runtime, plugins, parsers, and language
+  servers to the tracked versions.
 
-Neovim startup must be silent in headless mode. LSP configuration uses the
-native current-stable API. Each buffer has at most one automatic formatter:
-Biome when attached, otherwise vtsls. ESLint remains a diagnostics and
-explicit-fix provider. Native LSP completion is explicitly invoked. Automatic
-predictive completion is one DeepSeek FIM request at a time, rendered as ghost
-text and inserted only on explicit acceptance.
+Neovim startup must be silent in headless mode. Appearance uses Neovim's
+built-in dark `default` scheme with a transparent terminal background and a
+native Lua statusline. LSP configuration uses native `vim.lsp.config` and
+`vim.lsp.enable`. Each buffer has at most one automatic formatter: Biome when
+attached, otherwise vtsls. ESLint remains a diagnostics and explicit-fix
+provider (`:LspEslintFixAll`). Native LSP completion is explicitly invoked
+(`<C-Space>`). Automatic predictive completion is one DeepSeek FIM request at a
+time, rendered as ghost text and inserted only on explicit acceptance (`<C-y>`
+when no completion popup is open).
 
 ## Installation
 
@@ -37,7 +46,9 @@ toolchain must not silently select floating versions.
 
 ## Acceptance
 
-`check.sh` verifies the tracked Neovim and Tree-sitter versions, real configured
-Neovim startup, Telescope and Minuet loading, Git hook behavior, and tmux
-configuration parsing. A zero process status does not by itself establish clean
-Neovim startup; emitted startup errors are failures.
+`check.sh` verifies the tracked Neovim and Tree-sitter versions, absence of a
+competing `/usr/bin/nvim`, real configured Neovim startup (`vim.pack`,
+`mini.pick`, and `minuet`), Tree-sitter attachment, native `vtsls` attachment,
+Git hook behavior, and tmux configuration parsing. A zero process status does
+not by itself establish clean Neovim startup; emitted startup errors are
+failures.

@@ -33,9 +33,9 @@ native Lua statusline. LSP configuration uses native `vim.lsp.config` and
 `vim.lsp.enable`. Each buffer has at most one automatic formatter: Biome when
 attached, otherwise vtsls. ESLint remains a diagnostics and explicit-fix
 provider (`:LspEslintFixAll`). Native LSP completion is explicitly invoked
-(`<C-Space>`). Automatic predictive completion is one DeepSeek FIM request at a
-time, rendered as ghost text and inserted only on explicit acceptance (`<C-y>`
-when no completion popup is open).
+(`<C-Space>`). Automatic predictive completion is one Gemini 3.5 Flash-Lite
+(`thinkingLevel = "minimal"`) request at a time, rendered as ghost text and
+inserted only on explicit acceptance (`<C-y>` when no completion popup is open).
 
 ## Installation
 

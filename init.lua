@@ -153,27 +153,31 @@ require("mini.pick").setup({
   },
 })
 
--- Predictive Completion (DeepSeek FIM ghost text)
+-- Predictive Completion (Gemini 3.5 Flash-Lite ghost text)
 require("minuet").setup({
-  provider = "openai_fim_compatible",
+  provider = "gemini",
   n_completions = 1,
   context_window = 16000,
   context_ratio = 0.75,
   throttle = 1000,
-  debounce = 400,
+  debounce = 350,
   request_timeout = 3,
   virtualtext = {
     auto_trigger_ft = { "*" },
   },
   provider_options = {
-    openai_fim_compatible = {
-      model = "deepseek-v4-flash",
-      end_point = "https://api.deepseek.com/beta/completions",
-      api_key = "DEEPSEEK_API_KEY",
+    gemini = {
+      model = "gemini-3.5-flash-lite",
+      api_key = "GEMINI_API_KEY",
       stream = true,
       optional = {
-        max_tokens = 256,
-        top_p = 0.9,
+        generationConfig = {
+          maxOutputTokens = 256,
+          temperature = 0,
+          thinkingConfig = {
+            thinkingLevel = "minimal",
+          },
+        },
       },
     },
   },
